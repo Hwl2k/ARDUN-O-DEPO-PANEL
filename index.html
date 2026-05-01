@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ArduinoProJ Dashboard</title>
+
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
 body{background:#07111f;color:#e8eef7}
@@ -12,21 +13,20 @@ body{background:#07111f;color:#e8eef7}
 .logo{display:flex;align-items:center;gap:13px;font-size:22px;font-weight:700;margin-bottom:30px}
 .logo-icon{font-size:35px;color:#23d3ec}
 .menu a{display:flex;align-items:center;gap:14px;color:#dce7f4;text-decoration:none;padding:14px 15px;border-radius:8px;margin-bottom:8px;font-size:15px}
-.menu a.active{background:#1263ff;color:white}
-.menu a:hover{background:#1263ff}
+.menu a.active,.menu a:hover{background:#1263ff;color:white}
 .menu-bottom{position:absolute;bottom:25px;width:210px}
 .main{margin-left:245px;width:calc(100% - 245px)}
 .topbar{height:68px;border-bottom:1px solid #1b2b3f;background:#07111f;display:flex;justify-content:space-between;align-items:center;padding:0 28px}
 .lefttop{display:flex;align-items:center;gap:26px}
 .lefttop h1{font-size:22px}
-.hamb{font-size:25px;color:#e8eef7}
+.hamb{font-size:25px}
 .righttop{display:flex;align-items:center;gap:18px}
 .search{width:230px;background:#07111f;border:1px solid #21334a;border-radius:8px;color:white;padding:12px 15px}
 .bell{font-size:22px}
 .user{display:flex;align-items:center;gap:9px}
 .avatar{width:34px;height:34px;border-radius:50%;background:#1263ff;display:flex;align-items:center;justify-content:center}
 .content{padding:22px}
-.add-btn{float:right;margin-top:-18px;background:#1263ff;color:white;border:0;border-radius:7px;padding:11px 18px;font-size:15px}
+.add-btn{float:right;margin-top:-18px;background:#1263ff;color:white;border:0;border-radius:7px;padding:11px 18px;font-size:15px;cursor:pointer}
 .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:22px;margin-bottom:14px}
 .card{height:122px;background:#101c2b;border:1px solid #1e3045;border-radius:10px;padding:20px;display:flex;align-items:center;gap:20px}
 .circle{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:34px}
@@ -48,10 +48,9 @@ linear-gradient(to bottom,transparent 49%,#1a2a3d 50%,transparent 51%),
 linear-gradient(to bottom,transparent 74%,#1a2a3d 75%,transparent 76%)}
 .chart::before{content:"1.500\A 1.250\A 1.000\A 750\A 500\A 0";white-space:pre;position:absolute;left:-48px;top:-5px;color:#9fb0c3;font-size:13px;line-height:43px}
 .dates{display:flex;justify-content:space-around;color:#9fb0c3;font-size:13px;margin-left:45px;margin-top:12px}
-.dot{position:absolute;width:9px;height:9px;border-radius:50%;border:2px solid white}
 .line{position:absolute;height:3px;border-radius:20px;transform-origin:left center}
-.blue-line,.blue-dot{background:#1263ff;box-shadow:0 0 8px #1263ff}
-.red-line,.red-dot{background:#ff3f3f;box-shadow:0 0 8px #ff3f3f}
+.blue-line{background:#1263ff;box-shadow:0 0 8px #1263ff}
+.red-line{background:#ff3f3f;box-shadow:0 0 8px #ff3f3f}
 table{width:100%;border-collapse:collapse}
 th,td{padding:12px;border-bottom:1px solid #1e3045;text-align:left;font-size:14px}
 th{color:#a9b8ca;font-weight:500}
@@ -61,10 +60,17 @@ th{color:#a9b8ca;font-weight:500}
 .badge.ok{background:#123b2a;color:#23d579}
 .toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
 .filters{display:flex;gap:12px}
-.btn-icon{background:#102035;border:1px solid #26384e;color:#1677ff;border-radius:7px;padding:8px 10px}
+.btn-icon{background:#102035;border:1px solid #26384e;color:#1677ff;border-radius:7px;padding:8px 10px;cursor:pointer}
 .page{display:flex;justify-content:space-between;margin-top:18px;color:#a9b8ca}
 .pages button{background:#101c2b;border:1px solid #26384e;color:white;border-radius:7px;padding:10px 14px;margin-left:6px}
 .pages .active{background:#1263ff}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:99;align-items:center;justify-content:center}
+.modal-box{width:430px;background:#101c2b;border:1px solid #26384e;border-radius:14px;padding:22px}
+.modal-box h3{margin-bottom:15px}
+.modal-box input{width:100%;margin-bottom:10px;background:#07111f;border:1px solid #26384e;color:white;border-radius:8px;padding:12px}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end}
+.btn{border:0;border-radius:8px;padding:11px 15px;color:white;cursor:pointer}
+.save{background:#1263ff}.cancel{background:#334155}.delete{background:#dc2626}
 @media(max-width:1000px){
 .sidebar{position:relative;width:100%;height:auto}
 .main{margin-left:0;width:100%}
@@ -75,6 +81,7 @@ th{color:#a9b8ca;font-weight:500}
 }
 </style>
 </head>
+
 <body>
 
 <div class="app">
@@ -111,7 +118,7 @@ th{color:#a9b8ca;font-weight:500}
     </div>
 
     <div class="righttop">
-      <input class="search" placeholder="Ara...">
+      <input class="search" id="topSearch" placeholder="Ara...">
       <div class="bell">🔔</div>
       <div class="user">
         <div class="avatar">👤</div>
@@ -122,43 +129,27 @@ th{color:#a9b8ca;font-weight:500}
 
   <div class="content">
 
-    <button class="add-btn">+ Yeni Ürün</button>
+    <button class="add-btn" onclick="openModal()">+ Yeni Ürün</button>
 
     <section class="cards">
       <div class="card">
         <div class="circle c-blue">▱</div>
-        <div>
-          <small>Toplam Ürün</small>
-          <h2>1.248</h2>
-          <small>Tüm ürünleriniz</small>
-        </div>
+        <div><small>Toplam Ürün</small><h2 id="totalProducts">0</h2><small>Tüm ürünleriniz</small></div>
       </div>
 
       <div class="card">
         <div class="circle c-green">▣</div>
-        <div>
-          <small>Toplam Stok</small>
-          <h2>15.430</h2>
-          <small>Adet</small>
-        </div>
+        <div><small>Toplam Stok</small><h2 id="totalStock">0</h2><small>Adet</small></div>
       </div>
 
       <div class="card">
         <div class="circle c-orange">⌁</div>
-        <div>
-          <small>Stok Değeri</small>
-          <h2>₺2.458.650</h2>
-          <small>Toplam değer</small>
-        </div>
+        <div><small>Stok Değeri</small><h2 id="stockValue">₺0</h2><small>Toplam değer</small></div>
       </div>
 
       <div class="card">
         <div class="circle c-red">!</div>
-        <div>
-          <small>Düşük Stoklu Ürün</small>
-          <h2>23</h2>
-          <small>Ürün</small>
-        </div>
+        <div><small>Düşük Stoklu Ürün</small><h2 id="lowCount">0</h2><small>Ürün</small></div>
       </div>
     </section>
 
@@ -214,13 +205,7 @@ th{color:#a9b8ca;font-weight:500}
               <th>Durum</th>
             </tr>
           </thead>
-          <tbody>
-            <tr><td><div class="pcell"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Arduino_Nano.jpg/320px-Arduino_Nano.jpg">Arduino Nano</div></td><td>12</td><td>50</td><td><span class="badge">Düşük</span></td></tr>
-            <tr><td><div class="pcell"><img src="https://upload.wikimedia.org/wikipedia/commons/7/76/HC-SR04.jpg">HC-SR04 Ultrasonik Sensör</div></td><td>3</td><td>20</td><td><span class="badge">Düşük</span></td></tr>
-            <tr><td><div class="pcell"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/LCD_16x2.jpg/320px-LCD_16x2.jpg">I2C LCD 16x2</div></td><td>1</td><td>10</td><td><span class="badge">Düşük</span></td></tr>
-            <tr><td><div class="pcell"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Servo_Motor_SG90.jpg/320px-Servo_Motor_SG90.jpg">SG90 Servo Motor</div></td><td>5</td><td>15</td><td><span class="badge">Düşük</span></td></tr>
-            <tr><td><div class="pcell"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Breadboard.jpg/320px-Breadboard.jpg">Breadboard 400 Pin</div></td><td>7</td><td>20</td><td><span class="badge">Düşük</span></td></tr>
-          </tbody>
+          <tbody id="lowTable"></tbody>
         </table>
       </div>
     </section>
@@ -230,7 +215,7 @@ th{color:#a9b8ca;font-weight:500}
         <h3>Stok Durumu</h3>
         <div class="filters">
           <button class="select">Tüm Kategoriler⌄</button>
-          <input class="search" placeholder="Ürün ara...">
+          <input class="search" id="tableSearch" placeholder="Ürün ara...">
         </div>
       </div>
 
@@ -248,18 +233,11 @@ th{color:#a9b8ca;font-weight:500}
             <th>İşlemler</th>
           </tr>
         </thead>
-        <tbody>
-          <tr><td><div class="pcell"><img src="https://upload.wikimedia.org/wikipedia/commons/3/38/Arduino_Uno_-_R3.jpg">Arduino Uno R3</div></td><td>A0001</td><td>Arduino Kartları</td><td style="color:#23d579">25</td><td>Adet</td><td>₺299,90</td><td>₺7.497,50</td><td><span class="badge ok">Normal</span></td><td><button class="btn-icon">✎</button> <button class="btn-icon">...</button></td></tr>
-          <tr><td><div class="pcell"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Arduino_Nano.jpg/320px-Arduino_Nano.jpg">Arduino Nano</div></td><td>A0002</td><td>Arduino Kartları</td><td style="color:#ff5b5b">12</td><td>Adet</td><td>₺249,90</td><td>₺2.998,80</td><td><span class="badge">Düşük</span></td><td><button class="btn-icon">✎</button> <button class="btn-icon">...</button></td></tr>
-          <tr><td><div class="pcell"><img src="https://upload.wikimedia.org/wikipedia/commons/7/76/HC-SR04.jpg">HC-SR04 Ultrasonik Sensör</div></td><td>S0001</td><td>Sensörler</td><td style="color:#ff5b5b">3</td><td>Adet</td><td>₺29,90</td><td>₺89,70</td><td><span class="badge">Düşük</span></td><td><button class="btn-icon">✎</button> <button class="btn-icon">...</button></td></tr>
-          <tr><td><div class="pcell"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/LCD_16x2.jpg/320px-LCD_16x2.jpg">I2C LCD 16x2</div></td><td>D0001</td><td>Ekranlar</td><td style="color:#ff5b5b">1</td><td>Adet</td><td>₺89,90</td><td>₺89,90</td><td><span class="badge">Düşük</span></td><td><button class="btn-icon">✎</button> <button class="btn-icon">...</button></td></tr>
-          <tr><td><div class="pcell"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Servo_Motor_SG90.jpg/320px-Servo_Motor_SG90.jpg">SG90 Servo Motor</div></td><td>M0001</td><td>Motorlar</td><td style="color:#23d579">45</td><td>Adet</td><td>₺49,90</td><td>₺2.245,50</td><td><span class="badge ok">Normal</span></td><td><button class="btn-icon">✎</button> <button class="btn-icon">...</button></td></tr>
-          <tr><td><div class="pcell"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Breadboard.jpg/320px-Breadboard.jpg">Breadboard 400 Pin</div></td><td>B0001</td><td>Aksesuarlar</td><td style="color:#23d579">75</td><td>Adet</td><td>₺19,90</td><td>₺1.492,50</td><td><span class="badge ok">Normal</span></td><td><button class="btn-icon">✎</button> <button class="btn-icon">...</button></td></tr>
-        </tbody>
+        <tbody id="productTable"></tbody>
       </table>
 
       <div class="page">
-        <span>Toplam 1.248 kayıt</span>
+        <span id="recordText">Toplam 0 kayıt</span>
         <div class="pages">
           <button>‹</button>
           <button class="active">1</button>
@@ -275,6 +253,230 @@ th{color:#a9b8ca;font-weight:500}
   </div>
 </main>
 </div>
+
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <h3>Yeni Ürün Ekle</h3>
+    <input id="pName" placeholder="Ürün adı">
+    <input id="pCode" placeholder="Ürün kodu">
+    <input id="pCategory" placeholder="Kategori">
+    <input id="pStock" type="number" placeholder="Mevcut stok">
+    <input id="pMin" type="number" placeholder="Minimum stok">
+    <input id="pPrice" type="number" placeholder="Birim fiyat">
+    <input id="pImage" placeholder="Ürün resmi linki">
+    <div class="modal-actions">
+      <button class="btn cancel" onclick="closeModal()">İptal</button>
+      <button class="btn save" onclick="addProduct()">Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let products = JSON.parse(localStorage.getItem("arduinoProducts")) || [
+  {
+    img:"https://upload.wikimedia.org/wikipedia/commons/3/38/Arduino_Uno_-_R3.jpg",
+    name:"Arduino Uno R3",
+    code:"A0001",
+    cat:"Arduino Kartları",
+    stock:25,
+    min:10,
+    unit:"Adet",
+    price:299.90
+  },
+  {
+    img:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Arduino_Nano.jpg/320px-Arduino_Nano.jpg",
+    name:"Arduino Nano",
+    code:"A0002",
+    cat:"Arduino Kartları",
+    stock:12,
+    min:50,
+    unit:"Adet",
+    price:249.90
+  },
+  {
+    img:"https://upload.wikimedia.org/wikipedia/commons/7/76/HC-SR04.jpg",
+    name:"HC-SR04 Ultrasonik Sensör",
+    code:"S0001",
+    cat:"Sensörler",
+    stock:3,
+    min:20,
+    unit:"Adet",
+    price:29.90
+  },
+  {
+    img:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/LCD_16x2.jpg/320px-LCD_16x2.jpg",
+    name:"I2C LCD 16x2",
+    code:"D0001",
+    cat:"Ekranlar",
+    stock:1,
+    min:10,
+    unit:"Adet",
+    price:89.90
+  },
+  {
+    img:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Servo_Motor_SG90.jpg/320px-Servo_Motor_SG90.jpg",
+    name:"SG90 Servo Motor",
+    code:"M0001",
+    cat:"Motorlar",
+    stock:45,
+    min:15,
+    unit:"Adet",
+    price:49.90
+  },
+  {
+    img:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Breadboard.jpg/320px-Breadboard.jpg",
+    name:"Breadboard 400 Pin",
+    code:"B0001",
+    cat:"Aksesuarlar",
+    stock:75,
+    min:20,
+    unit:"Adet",
+    price:19.90
+  }
+];
+
+function save(){
+  localStorage.setItem("arduinoProducts", JSON.stringify(products));
+}
+
+function money(n){
+  return "₺" + Number(n).toLocaleString("tr-TR", {
+    minimumFractionDigits:2,
+    maximumFractionDigits:2
+  });
+}
+
+function getStatus(p){
+  return Number(p.stock) <= Number(p.min) ? "Düşük" : "Normal";
+}
+
+function render(){
+  let search = document.getElementById("tableSearch").value.toLowerCase();
+  let list = products.filter(p =>
+    p.name.toLowerCase().includes(search) ||
+    p.cat.toLowerCase().includes(search) ||
+    p.code.toLowerCase().includes(search)
+  );
+
+  productTable.innerHTML = list.map((p,i)=>`
+    <tr>
+      <td>
+        <div class="pcell">
+          <img src="${p.img}" onerror="this.src='https://via.placeholder.com/80'">
+          ${p.name}
+        </div>
+      </td>
+      <td>${p.code}</td>
+      <td>${p.cat}</td>
+      <td style="color:${getStatus(p)==='Düşük'?'#ff5b5b':'#23d579'}">${p.stock}</td>
+      <td>${p.unit}</td>
+      <td>${money(p.price)}</td>
+      <td>${money(p.stock*p.price)}</td>
+      <td><span class="badge ${getStatus(p)==='Normal'?'ok':''}">${getStatus(p)}</span></td>
+      <td>
+        <button class="btn-icon" onclick="increase(${i})">+</button>
+        <button class="btn-icon" onclick="decrease(${i})">-</button>
+        <button class="btn-icon" onclick="deleteProduct(${i})">Sil</button>
+      </td>
+    </tr>
+  `).join("");
+
+  let low = products.filter(p => Number(p.stock) <= Number(p.min));
+
+  lowTable.innerHTML = low.map(p=>`
+    <tr>
+      <td><div class="pcell"><img src="${p.img}" onerror="this.src='https://via.placeholder.com/80'">${p.name}</div></td>
+      <td>${p.stock}</td>
+      <td>${p.min}</td>
+      <td><span class="badge">Düşük</span></td>
+    </tr>
+  `).join("");
+
+  if(low.length === 0){
+    lowTable.innerHTML = `<tr><td colspan="4">Düşük stoklu ürün yok.</td></tr>`;
+  }
+
+  let totalStock = products.reduce((a,b)=>a+Number(b.stock),0);
+  let totalValue = products.reduce((a,b)=>a+(Number(b.stock)*Number(b.price)),0);
+
+  totalProducts.innerText = products.length;
+  totalStock.innerText = totalStock;
+  stockValue.innerText = money(totalValue);
+  lowCount.innerText = low.length;
+  recordText.innerText = "Toplam " + products.length + " kayıt";
+}
+
+function openModal(){
+  modal.style.display = "flex";
+}
+
+function closeModal(){
+  modal.style.display = "none";
+}
+
+function addProduct(){
+  let name = pName.value;
+  let code = pCode.value;
+  let cat = pCategory.value;
+  let stock = Number(pStock.value);
+  let min = Number(pMin.value);
+  let price = Number(pPrice.value);
+  let img = pImage.value || "https://via.placeholder.com/80";
+
+  if(!name || !code || !cat || !stock || !min || !price){
+    alert("Boş alan bırakma.");
+    return;
+  }
+
+  products.push({
+    img,
+    name,
+    code,
+    cat,
+    stock,
+    min,
+    unit:"Adet",
+    price
+  });
+
+  save();
+  render();
+  closeModal();
+
+  pName.value="";
+  pCode.value="";
+  pCategory.value="";
+  pStock.value="";
+  pMin.value="";
+  pPrice.value="";
+  pImage.value="";
+}
+
+function increase(i){
+  products[i].stock++;
+  save();
+  render();
+}
+
+function decrease(i){
+  if(products[i].stock > 0){
+    products[i].stock--;
+    save();
+    render();
+  }
+}
+
+function deleteProduct(i){
+  if(confirm("Bu ürünü silmek istiyor musun?")){
+    products.splice(i,1);
+    save();
+    render();
+  }
+}
+
+tableSearch.addEventListener("input", render);
+render();
+</script>
 
 </body>
 </html>
