@@ -3,419 +3,115 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ArduinoProJ Sistem</title>
+<title>ArduinoProJ Dashboard</title>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
 body{background:#07111f;color:#e8eef7}
-.login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#07111f}
-.login-card{width:390px;background:#101c2b;border:1px solid #1e3045;border-radius:16px;padding:25px}
-.login-card h1{margin-bottom:8px}
-.login-card p{color:#9fb0c3;margin-bottom:20px}
-input,select,textarea{width:100%;background:#07111f;border:1px solid #26384e;color:white;border-radius:8px;padding:12px;margin-bottom:10px}
-button{cursor:pointer}
-.btn{background:#1263ff;color:white;border:0;border-radius:8px;padding:11px 15px}
-.btn-gray{background:#334155}
-.btn-red{background:#dc2626}
-.btn-green{background:#16a34a}
-.row{display:flex;gap:10px}
-.app{display:none;min-height:100vh}
+.app{display:flex;min-height:100vh}
 .sidebar{width:245px;height:100vh;position:fixed;background:#07111f;border-right:1px solid #1b2b3f;padding:22px 15px}
 .logo{display:flex;align-items:center;gap:13px;font-size:22px;font-weight:700;margin-bottom:30px}
 .logo-icon{font-size:35px;color:#23d3ec}
-.menu button{width:100%;display:flex;align-items:center;gap:14px;color:#dce7f4;background:transparent;border:0;text-align:left;padding:14px 15px;border-radius:8px;margin-bottom:8px;font-size:15px}
-.menu button.active,.menu button:hover{background:#1263ff;color:white}
-.menu-bottom{position:absolute;bottom:25px;width:210px}
+.menu a{display:flex;align-items:center;gap:14px;color:#dce7f4;text-decoration:none;padding:14px 15px;border-radius:8px;margin-bottom:8px}
+.menu a.active,.menu a:hover{background:#1263ff}
 .main{margin-left:245px;width:calc(100% - 245px)}
-.topbar{height:68px;border-bottom:1px solid #1b2b3f;background:#07111f;display:flex;justify-content:space-between;align-items:center;padding:0 28px}
+.topbar{height:68px;border-bottom:1px solid #1b2b3f;display:flex;justify-content:space-between;align-items:center;padding:0 28px}
+.search{background:#07111f;border:1px solid #21334a;border-radius:8px;color:white;padding:12px 15px;width:230px}
 .content{padding:22px}
 .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:14px}
-.card{height:122px;background:#101c2b;border:1px solid #1e3045;border-radius:10px;padding:20px}
+.card{background:#101c2b;border:1px solid #1e3045;border-radius:10px;padding:20px}
 .card small{color:#9fb0c3}
-.card h2{font-size:30px;margin-top:10px}
-.panel{background:#101c2b;border:1px solid #1e3045;border-radius:10px;padding:18px;margin-bottom:14px}
+.card h2{font-size:28px;margin-top:8px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.panel{background:#101c2b;border:1px solid #1e3045;border-radius:10px;padding:18px}
+.panel h3{margin-bottom:10px}
+.chart{height:200px;border-left:1px solid #26384e;border-bottom:1px solid #26384e}
 table{width:100%;border-collapse:collapse}
-th,td{padding:12px;border-bottom:1px solid #1e3045;text-align:left;font-size:14px}
-th{color:#a9b8ca;font-weight:500}
-.badge{padding:7px 13px;border-radius:7px;background:#3b1820;color:#ff5b5b}
+th,td{padding:12px;border-bottom:1px solid #1e3045}
+th{color:#a9b8ca}
+.pcell{display:flex;align-items:center;gap:10px}
+.pcell img{width:45px;height:30px;background:white;border-radius:5px}
+.badge{padding:6px 12px;border-radius:6px;background:#3b1820;color:#ff5b5b}
 .badge.ok{background:#123b2a;color:#23d579}
-.chat-box{height:280px;overflow:auto;background:#07111f;border:1px solid #26384e;border-radius:10px;padding:12px;margin-bottom:10px}
-.msg{background:#102035;padding:10px;border-radius:8px;margin-bottom:8px}
-.msg b{color:#23d3ec}
-.hidden{display:none}
-@media(max-width:900px){
-.sidebar{position:relative;width:100%;height:auto}
-.main{margin-left:0;width:100%}
-.app{display:block}
-.cards{grid-template-columns:1fr}
-}
 </style>
 </head>
 
 <body>
 
-<div class="login-page" id="loginPage">
-  <div class="login-card">
-    <h1>ArduinoProJ</h1>
-    <p>Stok, admin ve sohbet sistemi</p>
-
-    <input id="loginUser" placeholder="Kullanıcı adı">
-    <input id="loginPass" type="password" placeholder="Şifre">
-
-    <div class="row">
-      <button class="btn" onclick="login()">Giriş Yap</button>
-      <button class="btn btn-gray" onclick="register()">Üye Ol</button>
-    </div>
-
-    <p style="margin-top:15px;font-size:13px">
-      Admin: <b>admin</b> / Şifre: <b>1234</b>
-    </p>
-  </div>
-</div>
-
-<div class="app" id="app">
+<div class="app">
 
 <aside class="sidebar">
-  <div class="logo">
-    <div class="logo-icon">∞</div>
-    <div>ArduinoProJ</div>
-  </div>
-
+  <div class="logo"><div class="logo-icon">∞</div>ArduinoProJ</div>
   <nav class="menu">
-    <button class="active" onclick="showPage('dashboard',this)">▦ Dashboard</button>
-    <button onclick="showPage('products',this)">⬡ Ürünler</button>
-    <button id="adminMenu" onclick="showPage('admin',this)">⚙ Admin Panosu</button>
-    <button id="chatMenu" onclick="showPage('chat',this)">💬 Genel Sohbet</button>
-    <button id="privateMenu" onclick="showPage('privateChat',this)">✉ Özel Sohbet</button>
-
-    <div class="menu-bottom">
-      <button onclick="logout()">↪ Çıkış Yap</button>
-    </div>
+    <a class="active">Dashboard</a>
+    <a>Ürünler</a>
+    <a>Kategoriler</a>
+    <a>Projeler</a>
+    <a>Sorgu</a>
+    <a>Stok Hareketleri</a>
   </nav>
 </aside>
 
 <main class="main">
 
-  <div class="topbar">
-    <h2 id="pageTitle">Dashboard</h2>
-    <div id="userInfo">Yönetici</div>
-  </div>
-
-  <div class="content">
-
-    <section id="dashboard">
-      <div class="cards">
-        <div class="card"><small>Toplam Ürün</small><h2 id="totalProducts">0</h2></div>
-        <div class="card"><small>Toplam Stok</small><h2 id="totalStock">0</h2></div>
-        <div class="card"><small>Düşük Stok</small><h2 id="lowStock">0</h2></div>
-        <div class="card"><small>Kullanıcı</small><h2 id="userCount">0</h2></div>
-      </div>
-
-      <div class="panel">
-        <h3>Son Durum</h3>
-        <p id="systemInfo">Sistem hazır.</p>
-      </div>
-    </section>
-
-    <section id="products" class="hidden">
-      <div class="panel" id="productAddPanel">
-        <h3>Yeni Ürün Ekle</h3>
-        <div class="row">
-          <input id="pName" placeholder="Ürün adı">
-          <input id="pCode" placeholder="Kod">
-        </div>
-        <div class="row">
-          <input id="pCategory" placeholder="Kategori">
-          <input id="pStock" type="number" placeholder="Stok">
-        </div>
-        <div class="row">
-          <input id="pMin" type="number" placeholder="Minimum stok">
-          <input id="pPrice" type="number" placeholder="Fiyat">
-        </div>
-        <input id="pImage" placeholder="Resim linki">
-        <button class="btn" onclick="addProduct()">Ürün Ekle</button>
-      </div>
-
-      <div class="panel">
-        <h3>Ürün Listesi</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Resim</th>
-              <th>Ürün</th>
-              <th>Kod</th>
-              <th>Kategori</th>
-              <th>Stok</th>
-              <th>Fiyat</th>
-              <th>Durum</th>
-              <th id="adminActionHead">İşlem</th>
-            </tr>
-          </thead>
-          <tbody id="productTable"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section id="admin" class="hidden">
-      <div class="panel">
-        <h3>Admin Panosu</h3>
-        <p>Admin tüm sistemi buradan kontrol eder.</p>
-      </div>
-
-      <div class="panel">
-        <h3>Kullanıcılar</h3>
-        <table>
-          <thead>
-            <tr><th>Kullanıcı</th><th>Rol</th><th>İşlem</th></tr>
-          </thead>
-          <tbody id="usersTable"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section id="chat" class="hidden">
-      <div class="panel">
-        <h3>Genel Sohbet</h3>
-        <div class="chat-box" id="generalMessages"></div>
-        <div class="row">
-          <input id="generalInput" placeholder="Mesaj yaz...">
-          <button class="btn" onclick="sendGeneral()">Gönder</button>
-        </div>
-      </div>
-    </section>
-
-    <section id="privateChat" class="hidden">
-      <div class="panel">
-        <h3>Özel Sohbet</h3>
-        <select id="privateTo"></select>
-        <div class="chat-box" id="privateMessages"></div>
-        <div class="row">
-          <input id="privateInput" placeholder="Özel mesaj yaz...">
-          <button class="btn" onclick="sendPrivate()">Gönder</button>
-        </div>
-      </div>
-    </section>
-
-  </div>
-</main>
+<div class="topbar">
+  <h2>Dashboard</h2>
+  <input class="search" placeholder="Ara...">
 </div>
 
-<script>
-let users = JSON.parse(localStorage.getItem("users")) || [
-  {username:"admin",password:"1234",role:"admin"}
-];
+<div class="content">
 
-let products = JSON.parse(localStorage.getItem("products")) || [];
-let generalChat = JSON.parse(localStorage.getItem("generalChat")) || [];
-let privateChat = JSON.parse(localStorage.getItem("privateChat")) || [];
-let currentUser = null;
+<div class="cards">
+  <div class="card"><small>Toplam Ürün</small><h2>1.248</h2></div>
+  <div class="card"><small>Toplam Stok</small><h2>15.430</h2></div>
+  <div class="card"><small>Stok Değeri</small><h2>₺2.458.650</h2></div>
+  <div class="card"><small>Düşük Stok</small><h2>23</h2></div>
+</div>
 
-function save(){
-  localStorage.setItem("users",JSON.stringify(users));
-  localStorage.setItem("products",JSON.stringify(products));
-  localStorage.setItem("generalChat",JSON.stringify(generalChat));
-  localStorage.setItem("privateChat",JSON.stringify(privateChat));
-}
+<div class="grid">
+  <div class="panel">
+    <h3>Stok Hareketleri</h3>
+    <div class="chart"></div>
+  </div>
 
-function login(){
-  let u = loginUser.value.trim();
-  let p = loginPass.value.trim();
-  let found = users.find(x=>x.username===u && x.password===p);
+  <div class="panel">
+    <h3>Düşük Stok</h3>
+    <table>
+      <tr><td>Arduino Nano</td><td>12</td><td><span class="badge">Düşük</span></td></tr>
+      <tr><td>HC-SR04</td><td>3</td><td><span class="badge">Düşük</span></td></tr>
+    </table>
+  </div>
+</div>
 
-  if(!found){
-    alert("Kullanıcı adı veya şifre yanlış.");
-    return;
-  }
-
-  currentUser = found;
-  loginPage.style.display="none";
-  app.style.display="flex";
-  setupRole();
-  render();
-}
-
-function register(){
-  let u = loginUser.value.trim();
-  let p = loginPass.value.trim();
-
-  if(!u || !p){
-    alert("Kullanıcı adı ve şifre yaz.");
-    return;
-  }
-
-  if(users.some(x=>x.username===u)){
-    alert("Bu kullanıcı zaten var.");
-    return;
-  }
-
-  users.push({username:u,password:p,role:"user"});
-  save();
-  alert("Üye oluşturuldu. Şimdi giriş yapabilirsin.");
-}
-
-function logout(){
-  currentUser=null;
-  app.style.display="none";
-  loginPage.style.display="flex";
-}
-
-function setupRole(){
-  userInfo.innerText = currentUser.username + " / " + currentUser.role;
-
-  if(currentUser.role==="admin"){
-    adminMenu.style.display="flex";
-    chatMenu.style.display="none";
-    privateMenu.style.display="none";
-    productAddPanel.style.display="block";
-    adminActionHead.style.display="table-cell";
-  } else {
-    adminMenu.style.display="none";
-    chatMenu.style.display="flex";
-    privateMenu.style.display="flex";
-    productAddPanel.style.display="none";
-    adminActionHead.style.display="none";
-  }
-}
-
-function showPage(id,btn){
-  document.querySelectorAll("main section").forEach(s=>s.classList.add("hidden"));
-  document.getElementById(id).classList.remove("hidden");
-  document.querySelectorAll(".menu button").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-  pageTitle.innerText = btn.innerText.replace(/[▦⬡⚙💬✉↪]/g,"").trim();
-  render();
-}
-
-function money(n){
-  return "₺" + Number(n).toLocaleString("tr-TR");
-}
-
-function status(p){
-  return Number(p.stock) <= Number(p.min) ? "Düşük" : "Normal";
-}
-
-function addProduct(){
-  let name=pName.value.trim();
-  let code=pCode.value.trim();
-  let cat=pCategory.value.trim();
-  let stock=Number(pStock.value);
-  let min=Number(pMin.value);
-  let price=Number(pPrice.value);
-  let img=pImage.value.trim() || "https://via.placeholder.com/80";
-
-  if(!name || !code || !cat){
-    alert("Ürün adı, kod ve kategori zorunlu.");
-    return;
-  }
-
-  products.push({name,code,cat,stock,min,price,img});
-  pName.value=pCode.value=pCategory.value=pStock.value=pMin.value=pPrice.value=pImage.value="";
-  save();
-  render();
-}
-
-function increase(i){
-  products[i].stock++;
-  save();
-  render();
-}
-
-function decrease(i){
-  if(products[i].stock>0) products[i].stock--;
-  save();
-  render();
-}
-
-function deleteProduct(i){
-  if(confirm("Ürün silinsin mi?")){
-    products.splice(i,1);
-    save();
-    render();
-  }
-}
-
-function deleteUser(i){
-  if(users[i].username==="admin"){
-    alert("Admin silinemez.");
-    return;
-  }
-  users.splice(i,1);
-  save();
-  render();
-}
-
-function sendGeneral(){
-  let msg=generalInput.value.trim();
-  if(!msg)return;
-  generalChat.push({from:currentUser.username,msg,time:new Date().toLocaleTimeString("tr-TR")});
-  generalInput.value="";
-  save();
-  render();
-}
-
-function sendPrivate(){
-  let to=privateTo.value;
-  let msg=privateInput.value.trim();
-  if(!msg)return;
-
-  privateChat.push({
-    from:currentUser.username,
-    to,
-    msg,
-    time:new Date().toLocaleTimeString("tr-TR")
-  });
-
-  privateInput.value="";
-  save();
-  render();
-}
-
-function render(){
-  totalProducts.innerText=products.length;
-  totalStock.innerText=products.reduce((a,b)=>a+Number(b.stock),0);
-  lowStock.innerText=products.filter(p=>Number(p.stock)<=Number(p.min)).length;
-  userCount.innerText=users.length;
-
-  productTable.innerHTML = products.length ? products.map((p,i)=>`
+<div class="panel">
+  <h3>Stok Durumu</h3>
+  <table>
     <tr>
-      <td><img src="${p.img}" style="width:55px;height:40px;object-fit:cover;border-radius:6px;background:white"></td>
-      <td>${p.name}</td>
-      <td>${p.code}</td>
-      <td>${p.cat}</td>
-      <td>${p.stock}</td>
-      <td>${money(p.price)}</td>
-      <td><span class="badge ${status(p)==='Normal'?'ok':''}">${status(p)}</span></td>
-      <td style="${currentUser.role==='admin'?'':'display:none'}">
-        <button class="btn btn-green" onclick="increase(${i})">+</button>
-        <button class="btn btn-gray" onclick="decrease(${i})">-</button>
-        <button class="btn btn-red" onclick="deleteProduct(${i})">Sil</button>
-      </td>
+      <th>Ürün</th><th>Kod</th><th>Kategori</th><th>Stok</th><th>Durum</th>
     </tr>
-  `).join("") : `<tr><td colspan="8">Henüz ürün yok.</td></tr>`;
 
-  usersTable.innerHTML = users.map((u,i)=>`
     <tr>
-      <td>${u.username}</td>
-      <td>${u.role}</td>
-      <td><button class="btn btn-red" onclick="deleteUser(${i})">Sil</button></td>
+      <td class="pcell"><img src="https://upload.wikimedia.org/wikipedia/commons/3/38/Arduino_Uno_-_R3.jpg">Arduino Uno</td>
+      <td>A001</td>
+      <td>Kart</td>
+      <td>25</td>
+      <td><span class="badge ok">Normal</span></td>
     </tr>
-  `).join("");
 
-  generalMessages.innerHTML = generalChat.map(m=>`
-    <div class="msg"><b>${m.from}</b> <small>${m.time}</small><br>${m.msg}</div>
-  `).join("");
+    <tr>
+      <td class="pcell"><img src="https://upload.wikimedia.org/wikipedia/commons/7/76/HC-SR04.jpg">HC-SR04</td>
+      <td>S001</td>
+      <td>Sensör</td>
+      <td>3</td>
+      <td><span class="badge">Düşük</span></td>
+    </tr>
 
-  privateTo.innerHTML = users
-    .filter(u=>u.username!==currentUser?.username)
-    .map(u=>`<option value="${u.username}">${u.username}</option>`)
-    .join("");
+  </table>
+</div>
 
-  privateMessages.innerHTML = privateChat
-    .filter(m=>m.from===currentUser?.username || m.to===currentUser?.username)
-    .map(m=>`<div class="msg"><b>${m.from} → ${m.to}</b> <small>${m.time}</small><br>${m.msg}</div>`)
-    .join("");
-}
-</script>
+</div>
+</main>
+</div>
 
 </body>
 </html>
