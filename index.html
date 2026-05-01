@@ -3,41 +3,56 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ArduinoProJ - Stok Paneli</title>
+<title>ArduinoProJ Dashboard</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,Arial,sans-serif}
-body{background:#07111f;color:#e5edf7}
-.app{display:flex;min-height:100vh;background:linear-gradient(135deg,#07111f,#0b1726)}
-.sidebar{width:245px;background:#07111f;border-right:1px solid #1b2a3d;padding:22px 15px;position:fixed;height:100vh}
-.logo{display:flex;align-items:center;gap:13px;font-size:22px;font-weight:800;margin-bottom:32px}
-.logo span{color:#24d3ee;font-size:31px}
-.menu a{display:flex;align-items:center;gap:14px;text-decoration:none;color:#dbe7f5;padding:14px 15px;border-radius:8px;margin-bottom:9px;font-size:15px}
-.menu a.active,.menu a:hover{background:#1263ff;color:white}
-.bottom{position:absolute;bottom:25px;width:210px}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#07111f;color:#e8eef7}
+.app{display:flex;min-height:100vh;background:#07111f}
+.sidebar{width:245px;height:100vh;position:fixed;background:#07111f;border-right:1px solid #1b2b3f;padding:22px 15px}
+.logo{display:flex;align-items:center;gap:13px;font-size:22px;font-weight:700;margin-bottom:30px}
+.logo-icon{font-size:35px;color:#23d3ec}
+.menu a{display:flex;align-items:center;gap:14px;color:#dce7f4;text-decoration:none;padding:14px 15px;border-radius:8px;margin-bottom:8px;font-size:15px}
+.menu a.active{background:#1263ff;color:white}
+.menu a:hover{background:#1263ff}
+.menu-bottom{position:absolute;bottom:25px;width:210px}
 .main{margin-left:245px;width:calc(100% - 245px)}
-.topbar{height:68px;border-bottom:1px solid #1b2a3d;display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:#081321}
+.topbar{height:68px;border-bottom:1px solid #1b2b3f;background:#07111f;display:flex;justify-content:space-between;align-items:center;padding:0 28px}
 .lefttop{display:flex;align-items:center;gap:26px}
-.hamb{font-size:25px}
-.search{background:#081321;border:1px solid #22344b;border-radius:8px;padding:12px 15px;color:white;width:230px}
-.user{display:flex;align-items:center;gap:18px}
-.add{background:#1263ff;color:white;border:0;border-radius:7px;padding:11px 18px;font-weight:700}
+.lefttop h1{font-size:22px}
+.hamb{font-size:25px;color:#e8eef7}
+.righttop{display:flex;align-items:center;gap:18px}
+.search{width:230px;background:#07111f;border:1px solid #21334a;border-radius:8px;color:white;padding:12px 15px}
+.bell{font-size:22px}
+.user{display:flex;align-items:center;gap:9px}
+.avatar{width:34px;height:34px;border-radius:50%;background:#1263ff;display:flex;align-items:center;justify-content:center}
 .content{padding:22px}
-.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:14px}
-.card{background:#101c2b;border:1px solid #1e3045;border-radius:10px;padding:22px;display:flex;align-items:center;gap:20px}
-.icon{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px}
-.blue{background:#0b2b5e;color:#2075ff}.green{background:#113c32;color:#26d47b}.orange{background:#3c2b13;color:#ffa62b}.red{background:#3b1820;color:#ff4848}
-.card small{color:#9fb0c3}.card h2{font-size:30px;margin:8px 0 3px}
+.add-btn{float:right;margin-top:-18px;background:#1263ff;color:white;border:0;border-radius:7px;padding:11px 18px;font-size:15px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:22px;margin-bottom:14px}
+.card{height:122px;background:#101c2b;border:1px solid #1e3045;border-radius:10px;padding:20px;display:flex;align-items:center;gap:20px}
+.circle{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:34px}
+.c-blue{background:#0c2a5d;color:#1d78ff;border:1px solid #1d5bd6}
+.c-green{background:#12382f;color:#25d77b}
+.c-orange{background:#3b2b16;color:#ffa62b}
+.c-red{background:#3a1820;color:#ff4d4d}
+.card small{color:#9fb0c3;font-size:14px}
+.card h2{font-size:30px;margin:8px 0 4px}
 .grid{display:grid;grid-template-columns:1fr .95fr;gap:14px;margin-bottom:14px}
 .panel{background:#101c2b;border:1px solid #1e3045;border-radius:10px;padding:18px}
-.panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .panel h3{font-size:17px}
-.select{background:#101c2b;border:1px solid #26384e;color:#dbe7f5;border-radius:7px;padding:9px 13px}
-.chart{height:255px;position:relative;border-left:1px solid #26384e;border-bottom:1px solid #26384e;margin:25px 12px 5px}
-.line{position:absolute;height:3px;border-radius:20px}
-.line.blueLine{background:#1263ff;box-shadow:0 0 10px #1263ff}
-.line.redLine{background:#ff3f3f;box-shadow:0 0 10px #ff3f3f}
-.legend{display:flex;gap:30px;color:#9fb0c3;font-size:13px;margin-left:45px}
-.low-list table,.stock-table{width:100%;border-collapse:collapse}
+.select{background:#101c2b;border:1px solid #26384e;color:#cfd9e6;border-radius:7px;padding:9px 13px}
+.legend{display:flex;gap:32px;font-size:13px;color:#9fb0c3;margin-left:48px;margin-bottom:10px}
+.chart{height:230px;margin:0 12px 0 45px;position:relative;border-left:1px solid #25374d;border-bottom:1px solid #25374d;background:
+linear-gradient(to bottom,transparent 24%,#1a2a3d 25%,transparent 26%),
+linear-gradient(to bottom,transparent 49%,#1a2a3d 50%,transparent 51%),
+linear-gradient(to bottom,transparent 74%,#1a2a3d 75%,transparent 76%)}
+.chart::before{content:"1.500\A 1.250\A 1.000\A 750\A 500\A 0";white-space:pre;position:absolute;left:-48px;top:-5px;color:#9fb0c3;font-size:13px;line-height:43px}
+.dates{display:flex;justify-content:space-around;color:#9fb0c3;font-size:13px;margin-left:45px;margin-top:12px}
+.dot{position:absolute;width:9px;height:9px;border-radius:50%;border:2px solid white}
+.line{position:absolute;height:3px;border-radius:20px;transform-origin:left center}
+.blue-line,.blue-dot{background:#1263ff;box-shadow:0 0 8px #1263ff}
+.red-line,.red-dot{background:#ff3f3f;box-shadow:0 0 8px #ff3f3f}
+table{width:100%;border-collapse:collapse}
 th,td{padding:12px;border-bottom:1px solid #1e3045;text-align:left;font-size:14px}
 th{color:#a9b8ca;font-weight:500}
 .pcell{display:flex;align-items:center;gap:12px}
@@ -50,14 +65,25 @@ th{color:#a9b8ca;font-weight:500}
 .page{display:flex;justify-content:space-between;margin-top:18px;color:#a9b8ca}
 .pages button{background:#101c2b;border:1px solid #26384e;color:white;border-radius:7px;padding:10px 14px;margin-left:6px}
 .pages .active{background:#1263ff}
-@media(max-width:1000px){.sidebar{position:relative;width:100%;height:auto}.main{margin-left:0;width:100%}.app{display:block}.cards,.grid{grid-template-columns:1fr}.topbar{height:auto;gap:15px;flex-wrap:wrap;padding:18px}.search{width:100%}}
+@media(max-width:1000px){
+.sidebar{position:relative;width:100%;height:auto}
+.main{margin-left:0;width:100%}
+.app{display:block}
+.cards,.grid{grid-template-columns:1fr}
+.topbar{height:auto;gap:15px;flex-wrap:wrap;padding:18px}
+.search{width:100%}
+}
 </style>
 </head>
 <body>
 
 <div class="app">
+
 <aside class="sidebar">
-  <div class="logo"><span>∞</span> ArduinoProJ</div>
+  <div class="logo">
+    <div class="logo-icon">∞</div>
+    <div>ArduinoProJ</div>
+  </div>
 
   <nav class="menu">
     <a class="active" href="#">▦ Dashboard</a>
@@ -68,7 +94,8 @@ th{color:#a9b8ca;font-weight:500}
     <a href="#">↔ Stok Hareketleri</a>
     <a href="#">🛒 Siparişler</a>
     <a href="#">▤ Raporlar</a>
-    <div class="bottom">
+
+    <div class="menu-bottom">
       <a href="#">⚙ Ayarlar</a>
       <a href="#">↪ Çıkış Yap</a>
     </div>
@@ -76,41 +103,62 @@ th{color:#a9b8ca;font-weight:500}
 </aside>
 
 <main class="main">
+
   <div class="topbar">
     <div class="lefttop">
       <div class="hamb">☰</div>
-      <h2>Dashboard</h2>
+      <h1>Dashboard</h1>
     </div>
 
-    <div class="user">
-      <input class="search" id="searchInput" placeholder="Ara...">
-      <span>🔔</span>
-      <span>👤 Yönetici⌄</span>
+    <div class="righttop">
+      <input class="search" placeholder="Ara...">
+      <div class="bell">🔔</div>
+      <div class="user">
+        <div class="avatar">👤</div>
+        <span>Yönetici⌄</span>
+      </div>
     </div>
   </div>
 
   <div class="content">
-    <button class="add" style="float:right;margin-top:-15px">+ Yeni Ürün</button>
+
+    <button class="add-btn">+ Yeni Ürün</button>
 
     <section class="cards">
       <div class="card">
-        <div class="icon blue">▱</div>
-        <div><small>Toplam Ürün</small><h2 id="totalProducts">0</h2><small>Tüm ürünleriniz</small></div>
+        <div class="circle c-blue">▱</div>
+        <div>
+          <small>Toplam Ürün</small>
+          <h2>1.248</h2>
+          <small>Tüm ürünleriniz</small>
+        </div>
       </div>
 
       <div class="card">
-        <div class="icon green">▣</div>
-        <div><small>Toplam Stok</small><h2 id="totalStock">0</h2><small>Adet</small></div>
+        <div class="circle c-green">▣</div>
+        <div>
+          <small>Toplam Stok</small>
+          <h2>15.430</h2>
+          <small>Adet</small>
+        </div>
       </div>
 
       <div class="card">
-        <div class="icon orange">⌁</div>
-        <div><small>Stok Değeri</small><h2 id="stockValue">₺0</h2><small>Toplam değer</small></div>
+        <div class="circle c-orange">⌁</div>
+        <div>
+          <small>Stok Değeri</small>
+          <h2>₺2.458.650</h2>
+          <small>Toplam değer</small>
+        </div>
       </div>
 
       <div class="card">
-        <div class="icon red">!</div>
-        <div><small>Düşük Stoklu Ürün</small><h2 id="lowCount">0</h2><small>Ürün</small></div>
+        <div class="circle c-red">!</div>
+        <div>
+          <small>Düşük Stoklu Ürün</small>
+          <h2>23</h2>
+          <small>Ürün</small>
+        </div>
       </div>
     </section>
 
@@ -121,23 +169,37 @@ th{color:#a9b8ca;font-weight:500}
           <button class="select">Son 30 Gün⌄</button>
         </div>
 
-        <div class="legend"><span>🔵 Giriş</span><span>🔴 Çıkış</span></div>
+        <div class="legend">
+          <span>🔵 Giriş</span>
+          <span>🔴 Çıkış</span>
+        </div>
 
         <div class="chart">
-          <div class="line blueLine" style="width:90px;left:45px;top:95px;transform:rotate(-22deg)"></div>
-          <div class="line blueLine" style="width:105px;left:130px;top:92px;transform:rotate(10deg)"></div>
-          <div class="line blueLine" style="width:120px;left:230px;top:75px;transform:rotate(-18deg)"></div>
-          <div class="line blueLine" style="width:105px;left:340px;top:85px;transform:rotate(15deg)"></div>
-          <div class="line blueLine" style="width:135px;left:430px;top:80px;transform:rotate(-10deg)"></div>
+          <div class="line blue-line" style="left:15px;top:93px;width:70px;transform:rotate(-24deg)"></div>
+          <div class="line blue-line" style="left:82px;top:65px;width:85px;transform:rotate(18deg)"></div>
+          <div class="line blue-line" style="left:162px;top:92px;width:90px;transform:rotate(-8deg)"></div>
+          <div class="line blue-line" style="left:250px;top:80px;width:90px;transform:rotate(18deg)"></div>
+          <div class="line blue-line" style="left:335px;top:108px;width:105px;transform:rotate(-28deg)"></div>
+          <div class="line blue-line" style="left:432px;top:56px;width:90px;transform:rotate(22deg)"></div>
 
-          <div class="line redLine" style="width:95px;left:45px;top:145px;transform:rotate(-12deg)"></div>
-          <div class="line redLine" style="width:120px;left:135px;top:148px;transform:rotate(8deg)"></div>
-          <div class="line redLine" style="width:110px;left:255px;top:142px;transform:rotate(-10deg)"></div>
-          <div class="line redLine" style="width:115px;left:370px;top:150px;transform:rotate(13deg)"></div>
+          <div class="line red-line" style="left:15px;top:150px;width:70px;transform:rotate(-14deg)"></div>
+          <div class="line red-line" style="left:82px;top:132px;width:86px;transform:rotate(18deg)"></div>
+          <div class="line red-line" style="left:165px;top:156px;width:88px;transform:rotate(-12deg)"></div>
+          <div class="line red-line" style="left:250px;top:139px;width:100px;transform:rotate(2deg)"></div>
+          <div class="line red-line" style="left:348px;top:143px;width:95px;transform:rotate(18deg)"></div>
+          <div class="line red-line" style="left:440px;top:174px;width:105px;transform:rotate(-18deg)"></div>
+        </div>
+
+        <div class="dates">
+          <span>24 Nis</span>
+          <span>1 May</span>
+          <span>8 May</span>
+          <span>15 May</span>
+          <span>22 May</span>
         </div>
       </div>
 
-      <div class="panel low-list">
+      <div class="panel">
         <div class="panel-head">
           <h3>Düşük Stoklu Ürünler</h3>
           <a style="color:#1677ff;text-decoration:none" href="#">Tümünü Gör</a>
@@ -145,9 +207,20 @@ th{color:#a9b8ca;font-weight:500}
 
         <table>
           <thead>
-            <tr><th>Ürün</th><th>Mevcut Stok</th><th>Minimum Stok</th><th>Durum</th></tr>
+            <tr>
+              <th>Ürün</th>
+              <th>Mevcut Stok</th>
+              <th>Minimum Stok</th>
+              <th>Durum</th>
+            </tr>
           </thead>
-          <tbody id="lowTable"></tbody>
+          <tbody>
+            <tr><td><div class="pcell"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Arduino_Nano.jpg/320px-Arduino_Nano.jpg">Arduino Nano</div></td><td>12</td><td>50</td><td><span class="badge">Düşük</span></td></tr>
+            <tr><td><div class="pcell"><img src="https://upload.wikimedia.org/wikipedia/commons/7/76/HC-SR04.jpg">HC-SR04 Ultrasonik Sensör</div></td><td>3</td><td>20</td><td><span class="badge">Düşük</span></td></tr>
+            <tr><td><div class="pcell"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/LCD_16x2.jpg/320px-LCD_16x2.jpg">I2C LCD 16x2</div></td><td>1</td><td>10</td><td><span class="badge">Düşük</span></td></tr>
+            <tr><td><div class="pcell"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Servo_Motor_SG90.jpg/320px-Servo_Motor_SG90.jpg">SG90 Servo Motor</div></td><td>5</td><td>15</td><td><span class="badge">Düşük</span></td></tr>
+            <tr><td><div class="pcell"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Breadboard.jpg/320px-Breadboard.jpg">Breadboard 400 Pin</div></td><td>7</td><td>20</td><td><span class="badge">Düşük</span></td></tr>
+          </tbody>
         </table>
       </div>
     </section>
@@ -157,11 +230,11 @@ th{color:#a9b8ca;font-weight:500}
         <h3>Stok Durumu</h3>
         <div class="filters">
           <button class="select">Tüm Kategoriler⌄</button>
-          <input class="search" id="tableSearch" placeholder="Ürün ara...">
+          <input class="search" placeholder="Ürün ara...">
         </div>
       </div>
 
-      <table class="stock-table">
+      <table>
         <thead>
           <tr>
             <th></th>
@@ -175,60 +248,33 @@ th{color:#a9b8ca;font-weight:500}
             <th>İşlemler</th>
           </tr>
         </thead>
-        <tbody id="productTable"></tbody>
+        <tbody>
+          <tr><td><div class="pcell"><img src="https://upload.wikimedia.org/wikipedia/commons/3/38/Arduino_Uno_-_R3.jpg">Arduino Uno R3</div></td><td>A0001</td><td>Arduino Kartları</td><td style="color:#23d579">25</td><td>Adet</td><td>₺299,90</td><td>₺7.497,50</td><td><span class="badge ok">Normal</span></td><td><button class="btn-icon">✎</button> <button class="btn-icon">...</button></td></tr>
+          <tr><td><div class="pcell"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Arduino_Nano.jpg/320px-Arduino_Nano.jpg">Arduino Nano</div></td><td>A0002</td><td>Arduino Kartları</td><td style="color:#ff5b5b">12</td><td>Adet</td><td>₺249,90</td><td>₺2.998,80</td><td><span class="badge">Düşük</span></td><td><button class="btn-icon">✎</button> <button class="btn-icon">...</button></td></tr>
+          <tr><td><div class="pcell"><img src="https://upload.wikimedia.org/wikipedia/commons/7/76/HC-SR04.jpg">HC-SR04 Ultrasonik Sensör</div></td><td>S0001</td><td>Sensörler</td><td style="color:#ff5b5b">3</td><td>Adet</td><td>₺29,90</td><td>₺89,70</td><td><span class="badge">Düşük</span></td><td><button class="btn-icon">✎</button> <button class="btn-icon">...</button></td></tr>
+          <tr><td><div class="pcell"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/LCD_16x2.jpg/320px-LCD_16x2.jpg">I2C LCD 16x2</div></td><td>D0001</td><td>Ekranlar</td><td style="color:#ff5b5b">1</td><td>Adet</td><td>₺89,90</td><td>₺89,90</td><td><span class="badge">Düşük</span></td><td><button class="btn-icon">✎</button> <button class="btn-icon">...</button></td></tr>
+          <tr><td><div class="pcell"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Servo_Motor_SG90.jpg/320px-Servo_Motor_SG90.jpg">SG90 Servo Motor</div></td><td>M0001</td><td>Motorlar</td><td style="color:#23d579">45</td><td>Adet</td><td>₺49,90</td><td>₺2.245,50</td><td><span class="badge ok">Normal</span></td><td><button class="btn-icon">✎</button> <button class="btn-icon">...</button></td></tr>
+          <tr><td><div class="pcell"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Breadboard.jpg/320px-Breadboard.jpg">Breadboard 400 Pin</div></td><td>B0001</td><td>Aksesuarlar</td><td style="color:#23d579">75</td><td>Adet</td><td>₺19,90</td><td>₺1.492,50</td><td><span class="badge ok">Normal</span></td><td><button class="btn-icon">✎</button> <button class="btn-icon">...</button></td></tr>
+        </tbody>
       </table>
 
       <div class="page">
         <span>Toplam 1.248 kayıt</span>
         <div class="pages">
-          <button>‹</button><button class="active">1</button><button>2</button><button>3</button><button>...</button><button>250</button><button>›</button>
+          <button>‹</button>
+          <button class="active">1</button>
+          <button>2</button>
+          <button>3</button>
+          <button>...</button>
+          <button>250</button>
+          <button>›</button>
         </div>
       </div>
     </section>
+
   </div>
 </main>
 </div>
-
-<script>
-const products=[
-{img:"https://upload.wikimedia.org/wikipedia/commons/3/38/Arduino_Uno_-_R3.jpg",name:"Arduino Uno R3",code:"A0001",cat:"Arduino Kartları",stock:25,min:10,unit:"Adet",price:299.90},
-{img:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Arduino_Nano.jpg/320px-Arduino_Nano.jpg",name:"Arduino Nano",code:"A0002",cat:"Arduino Kartları",stock:12,min:50,unit:"Adet",price:249.90},
-{img:"https://upload.wikimedia.org/wikipedia/commons/7/76/HC-SR04.jpg",name:"HC-SR04 Ultrasonik Sensör",code:"S0001",cat:"Sensörler",stock:3,min:20,unit:"Adet",price:29.90},
-{img:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/LCD_16x2.jpg/320px-LCD_16x2.jpg",name:"I2C LCD 16x2",code:"D0001",cat:"Ekranlar",stock:1,min:10,unit:"Adet",price:89.90},
-{img:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Servo_Motor_SG90.jpg/320px-Servo_Motor_SG90.jpg",name:"SG90 Servo Motor",code:"M0001",cat:"Motorlar",stock:45,min:15,unit:"Adet",price:49.90},
-{img:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Breadboard.jpg/320px-Breadboard.jpg",name:"Breadboard 400 Pin",code:"B0001",cat:"Aksesuarlar",stock:75,min:20,unit:"Adet",price:19.90}
-];
-
-function money(n){return "₺"+n.toLocaleString("tr-TR",{minimumFractionDigits:2})}
-function status(p){return p.stock<=p.min?"Düşük":"Normal"}
-function render(){
- let q=(document.getElementById("tableSearch").value||"").toLowerCase();
- let list=products.filter(p=>p.name.toLowerCase().includes(q)||p.cat.toLowerCase().includes(q));
- productTable.innerHTML=list.map(p=>`
- <tr>
-  <td><div class="pcell"><img src="${p.img}"><span>${p.name}</span></div></td>
-  <td>${p.code}</td><td>${p.cat}</td>
-  <td style="color:${p.stock<=p.min?'#ff5b5b':'#23d579'}">${p.stock}</td>
-  <td>${p.unit}</td><td>${money(p.price)}</td><td>${money(p.stock*p.price)}</td>
-  <td><span class="badge ${status(p)==='Normal'?'ok':''}">${status(p)}</span></td>
-  <td><button class="btn-icon">✎</button> <button class="btn-icon">...</button></td>
- </tr>`).join("");
-
- let low=products.filter(p=>p.stock<=p.min);
- lowTable.innerHTML=low.map(p=>`
- <tr>
-  <td><div class="pcell"><img src="${p.img}"><span>${p.name}</span></div></td>
-  <td>${p.stock}</td><td>${p.min}</td><td><span class="badge">Düşük</span></td>
- </tr>`).join("");
-
- totalProducts.innerText="1.248";
- totalStock.innerText="15.430";
- stockValue.innerText="₺2.458.650";
- lowCount.innerText=low.length;
-}
-tableSearch.addEventListener("input",render);
-render();
-</script>
 
 </body>
 </html>
