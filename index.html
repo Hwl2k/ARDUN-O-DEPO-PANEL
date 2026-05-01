@@ -4,267 +4,120 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DepoPanel</title>
-
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,Arial,sans-serif}
 body{background:#070d18;color:#f4f7ff}
 .app{display:flex;min-height:100vh;background:radial-gradient(circle at 80% 0%,#111b32,#070d18 55%)}
-
-.sidebar{
-width:285px;height:100vh;position:fixed;left:0;top:0;
-background:#080f1d;border-right:1px solid #1b2b44;
-padding:24px 20px
-}
+.sidebar{width:285px;height:100vh;position:fixed;left:0;top:0;background:#080f1d;border-right:1px solid #1b2b44;padding:24px 20px}
 .logo{display:flex;align-items:center;gap:12px;font-size:25px;font-weight:800;margin-bottom:30px}
 .logo-icon{font-size:34px;color:#2f9dff}
 .menu-title{font-size:12px;color:#7f8da3;margin:21px 7px 10px}
-.menu a{
-display:flex;align-items:center;gap:14px;
-color:#d8e3f2;text-decoration:none;padding:12px 14px;
-border-radius:10px;margin-bottom:6px;font-size:15px
-}
-.menu a.active{
-background:linear-gradient(90deg,#4b29b8,#1c2953);
-border:1px solid #6248e8;color:white
-}
-.menu a:hover{background:#111b2e}
-.dot{margin-left:auto;background:#ec3b66;color:white;border-radius:50%;padding:3px 8px;font-size:12px}
+.menu a{display:flex;align-items:center;gap:14px;color:#d8e3f2;text-decoration:none;padding:12px 14px;border-radius:10px;margin-bottom:6px;font-size:15px}
+.menu a.active{background:linear-gradient(90deg,#4b29b8,#1c2953);border:1px solid #6248e8;color:white}
 .new{margin-left:auto;background:#7929e8;color:white;border-radius:999px;padding:4px 9px;font-size:12px}
-
-.guest{
-position:absolute;bottom:24px;left:20px;right:20px;
-background:#0c1829;border:1px solid #1d324d;border-radius:12px;
-padding:22px;text-align:center
-}
-.guest h3{color:#38e48b;margin-bottom:8px}
-.guest p{color:#aab6c8;font-size:13px;margin-bottom:16px}
-.guest button{
-width:100%;padding:13px;border:0;border-radius:9px;
-background:#0b7543;color:white;font-weight:700
-}
-
+.dot{margin-left:auto;background:#ec3b66;color:white;border-radius:50%;padding:3px 8px;font-size:12px}
+.guest{position:absolute;bottom:24px;left:20px;right:20px;background:#0c1829;border:1px solid #1d324d;border-radius:12px;padding:22px;text-align:center}
+.guest h3{color:#38e48b;margin-bottom:8px}.guest p{color:#aab6c8;font-size:13px;margin-bottom:16px}
+.guest button{width:100%;padding:13px;border:0;border-radius:9px;background:#0b7543;color:white;font-weight:700}
 .main{margin-left:285px;width:calc(100% - 285px);padding:18px 24px}
 .topbar{height:56px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
-.search{
-width:455px;background:#0d1628;border:1px solid #1d2d47;
-border-radius:10px;color:#cbd5e1;padding:14px 18px;font-size:14px
-}
+.search{width:455px;background:#0d1628;border:1px solid #1d2d47;border-radius:10px;color:#cbd5e1;padding:14px 18px;font-size:14px}
 .top-actions{display:flex;align-items:center;gap:16px}
-.add{
-background:linear-gradient(90deg,#4961ff,#7b2cff);
-border:0;color:white;border-radius:9px;padding:14px 24px;
-font-weight:700;font-size:15px
-}
-.icon{
-width:42px;height:42px;border-radius:10px;background:#0d1628;
-border:1px solid #1d2d47;display:flex;align-items:center;justify-content:center;
-position:relative
-}
-.notif{
-position:absolute;right:-6px;top:-7px;background:#ec3b66;color:white;
-font-size:12px;border-radius:50%;padding:3px 7px
-}
-.user{display:flex;align-items:center;gap:10px;color:#dce6f5}
-.avatar{width:39px;height:39px;background:#17243a;border-radius:50%;display:flex;align-items:center;justify-content:center}
-.user small{color:#a7b4c8}
-
+.add{background:linear-gradient(90deg,#4961ff,#7b2cff);border:0;color:white;border-radius:9px;padding:14px 24px;font-weight:700;font-size:15px;cursor:pointer}
+.icon{width:42px;height:42px;border-radius:10px;background:#0d1628;border:1px solid #1d2d47;display:flex;align-items:center;justify-content:center;position:relative}
+.notif{position:absolute;right:-6px;top:-7px;background:#ec3b66;color:white;font-size:12px;border-radius:50%;padding:3px 7px}
+.user{display:flex;align-items:center;gap:10px;color:#dce6f5}.user small{color:#a7b4c8}
 .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:14px}
-.card{
-background:#0d1628;border:1px solid #1d2d47;border-radius:12px;
-padding:24px 22px;display:flex;justify-content:space-between;align-items:center;
-min-height:128px
-}
-.card small{color:#a7b4c8}
-.card h2{font-size:30px;margin:10px 0 8px}
-.plus{color:#38e48b;font-size:13px}
-.card-icon{
-width:66px;height:66px;border-radius:13px;display:flex;
-align-items:center;justify-content:center;font-size:33px
-}
-.purple{background:#241a5a;color:#8a65ff}
-.orange{background:#3c2815;color:#ffb443}
-.red{background:#3e1728;color:#ff5b73}
-.green{background:#123b2a;color:#47e682}
-
+.card{background:#0d1628;border:1px solid #1d2d47;border-radius:12px;padding:24px 22px;display:flex;justify-content:space-between;align-items:center;min-height:128px}
+.card small{color:#a7b4c8}.card h2{font-size:30px;margin:10px 0 8px}.plus{color:#38e48b;font-size:13px}
+.card-icon{width:66px;height:66px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:33px}
+.purple{background:#241a5a;color:#8a65ff}.orange{background:#3c2815;color:#ffb443}.red{background:#3e1728;color:#ff5b73}.green{background:#123b2a;color:#47e682}
 .layout{display:grid;grid-template-columns:2fr .95fr;gap:14px}
-.panel{
-background:#0d1628;border:1px solid #1d2d47;border-radius:12px;
-padding:20px;margin-bottom:14px
-}
+.panel{background:#0d1628;border:1px solid #1d2d47;border-radius:12px;padding:20px;margin-bottom:14px}
 .panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-.panel h3{font-size:20px}
-.panel p{color:#a7b4c8;font-size:14px;margin-top:7px}
-.tools{display:flex;gap:10px}
+.panel h3{font-size:20px}.panel p{color:#a7b4c8;font-size:14px;margin-top:7px}
 .tool{background:#0b1322;border:1px solid #1d2d47;color:#dce7f5;border-radius:9px;padding:11px 16px}
-
 table{width:100%;border-collapse:collapse}
 th,td{padding:11px 10px;border-bottom:1px solid #1b2940;text-align:left;font-size:14px}
 th{color:#a7b4c8;font-weight:500;background:#0b1322}
 .photo{width:70px;height:48px;object-fit:cover;background:white;border-radius:7px}
-.tag{padding:7px 10px;border-radius:7px;font-size:13px}
-.t-purple{background:#241a5a;color:#b09cff}
-.t-blue{background:#12325a;color:#65b8ff}
-.t-orange{background:#3c2815;color:#ffbf5f}
-.t-green{background:#113b2a;color:#55e68a}
-.t-cyan{background:#123b4b;color:#35d9ff}
-.status{padding:7px 11px;border-radius:7px;font-size:13px}
-.az{background:#3b2815;color:#ffb443}
-.yeter{background:#123b2a;color:#55e68a}
-.eksik{background:#3e1728;color:#ff6d7e}
-.action{
-width:34px;height:34px;border-radius:8px;background:#172446;
-border:1px solid #25395f;color:#7da2ff;margin-right:6px
-}
+.tag,.status{padding:7px 10px;border-radius:7px;font-size:13px}
+.t-purple{background:#241a5a;color:#b09cff}.t-blue{background:#12325a;color:#65b8ff}.t-orange{background:#3c2815;color:#ffbf5f}.t-green{background:#113b2a;color:#55e68a}.t-cyan{background:#123b4b;color:#35d9ff}
+.az{background:#3b2815;color:#ffb443}.yeter{background:#123b2a;color:#55e68a}.eksik{background:#3e1728;color:#ff6d7e}
+.action{width:34px;height:34px;border-radius:8px;background:#172446;border:1px solid #25395f;color:#7da2ff;margin-right:6px;cursor:pointer}
 .more{text-align:center;color:#a7b4c8;margin-top:13px}
-
 .ai{background:linear-gradient(145deg,#11173a,#0d1628);border:1px solid #3a2867}
-.ai-title{color:#9d65ff;margin-bottom:18px}
-.chat-msg{background:#221c44;border-radius:12px;padding:15px;margin-bottom:14px;color:#eee7ff}
-.quick{
-display:block;width:max-content;margin:8px 0;padding:9px 12px;
-border-radius:8px;border:1px solid #6939c7;color:#9d84ff;background:transparent
-}
-.chat-input{display:flex;gap:8px;margin-top:18px}
-.chat-input input{flex:1;background:#151d32;border:1px solid #283751;color:white;border-radius:9px;padding:13px}
-.chat-input button{width:42px;border:0;border-radius:9px;background:#6d2bdc;color:white}
-
+.ai-title{color:#9d65ff;margin-bottom:18px}.chat-msg{background:#221c44;border-radius:12px;padding:15px;margin-bottom:14px;color:#eee7ff}
+.quick{display:block;width:max-content;margin:8px 0;padding:9px 12px;border-radius:8px;border:1px solid #6939c7;color:#9d84ff;background:transparent}
+.chat-input{display:flex;gap:8px;margin-top:18px}.chat-input input{flex:1;background:#151d32;border:1px solid #283751;color:white;border-radius:9px;padding:13px}.chat-input button{width:42px;border:0;border-radius:9px;background:#6d2bdc;color:white}
 .project-card{display:flex;gap:16px;margin-top:14px;background:#0b1322;border:1px solid #1d2d47;border-radius:10px;overflow:hidden}
-.project-card img{width:120px;object-fit:cover}
-.project-body{padding:15px}
-.tags{display:flex;gap:8px;flex-wrap:wrap;margin:13px 0}
-.tags span{background:#0f3944;color:#55eaff;padding:7px 10px;border-radius:7px;font-size:12px}
-.detail{width:100%;padding:13px;border:0;border-radius:8px;background:linear-gradient(90deg,#9a36e8,#5d23c8);color:white;font-weight:700}
-
-.ann{display:flex;align-items:center;gap:16px;padding:12px 5px;border-bottom:1px solid #1b2940}
-.ann-icon{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:25px}
-.ann-text{flex:1}
-.ann small{color:#a7b4c8}
-.admin-note{text-align:right;color:#38e48b;font-size:13px}
+.project-card img{width:120px;object-fit:cover}.project-body{padding:15px}.tags{display:flex;gap:8px;flex-wrap:wrap;margin:13px 0}
+.tags span{background:#0f3944;color:#55eaff;padding:7px 10px;border-radius:7px;font-size:12px}.detail{width:100%;padding:13px;border:0;border-radius:8px;background:linear-gradient(90deg,#9a36e8,#5d23c8);color:white;font-weight:700}
+.ann{display:flex;align-items:center;gap:16px;padding:12px 5px;border-bottom:1px solid #1b2940}.ann-icon{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:25px}.ann-text{flex:1}.ann small{color:#a7b4c8}.admin-note{text-align:right;color:#38e48b;font-size:13px}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:50;align-items:center;justify-content:center}
+.modal-box{width:480px;background:#0d1628;border:1px solid #334a72;border-radius:14px;padding:22px}
+.modal-box h3{margin-bottom:15px}.modal-box input,.modal-box select{width:100%;background:#08111f;border:1px solid #26384e;color:white;border-radius:9px;padding:12px;margin-bottom:10px}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end}.cancel,.save{border:0;border-radius:9px;padding:12px 16px;color:white;cursor:pointer}.cancel{background:#334155}.save{background:#6d2bdc}
+.empty{text-align:center;color:#7f8da3;padding:35px}
 </style>
 </head>
 
 <body>
 <div class="app">
-
 <aside class="sidebar">
   <div class="logo"><div class="logo-icon">❯❯</div><div>DepoPanel</div></div>
-
   <nav class="menu">
     <a class="active">⌂ Ana Sayfa</a>
-
     <div class="menu-title">ENVANTER</div>
-    <a>▦ Tüm Malzemeler</a>
-    <a>▱ Kategoriler</a>
-    <a>▧ Reyonlar</a>
-    <a>ⓘ Az Kalanlar</a>
-    <a>▣ Eksik Malzemeler</a>
-
+    <a>▦ Tüm Malzemeler</a><a>▱ Kategoriler</a><a>▧ Reyonlar</a><a>ⓘ Az Kalanlar</a><a>▣ Eksik Malzemeler</a>
     <div class="menu-title">AKILLI SİSTEM</div>
-    <a>✧ Yapay Zeka Asistanı <span class="new">Yeni</span></a>
-    <a>✣ Proje Fikirleri</a>
-    <a>✦ Eksik Parça Önerileri</a>
-
+    <a>✧ Yapay Zeka Asistanı <span class="new">Yeni</span></a><a>✣ Proje Fikirleri</a><a>✦ Eksik Parça Önerileri</a>
     <div class="menu-title">MESAJLAR</div>
-    <a>✉ Mesajlar <span class="dot">2</span></a>
-    <a>☞ Duyurular</a>
-
+    <a>✉ Mesajlar <span class="dot">2</span></a><a>☞ Duyurular</a>
     <div class="menu-title">YÖNETİM</div>
-    <a>♙ Kullanıcılar</a>
-    <a>⌘ Davet Kodları</a>
-    <a>▥ Raporlar</a>
-    <a>⚙ Ayarlar</a>
+    <a>♙ Kullanıcılar</a><a>⌘ Davet Kodları</a><a>▥ Raporlar</a><a>⚙ Ayarlar</a>
   </nav>
-
-  <div class="guest">
-    <h3>Misafir Modu</h3>
-    <p>Sınırlı erişimdesiniz</p>
-    <button>🔒 Üye Girişi Yap</button>
-  </div>
+  <div class="guest"><h3>Misafir Modu</h3><p>Sınırlı erişimdesiniz</p><button>🔒 Üye Girişi Yap</button></div>
 </aside>
 
 <main class="main">
-
   <div class="topbar">
-    <input class="search" placeholder="⌕  Malzeme ara...                                      Ctrl + K">
-
+    <input class="search" id="searchInput" placeholder="⌕  Malzeme ara...                                      Ctrl + K">
     <div class="top-actions">
-      <button class="add">＋ Malzeme Ekle</button>
+      <button class="add" onclick="openModal()">＋ Malzeme Ekle</button>
       <div class="icon">🔔<span class="notif">3</span></div>
       <div class="icon">👤</div>
-      <div class="user">
-        <div>
-          <div>Hoş geldin, <b>Admin</b></div>
-          <small>Yönetici</small>
-        </div>
-        <span>⌄</span>
-      </div>
+      <div class="user"><div><div>Hoş geldin, <b>Admin</b></div><small>Yönetici</small></div><span>⌄</span></div>
     </div>
   </div>
 
   <section class="cards">
-    <div class="card">
-      <div><small>Toplam Malzeme</small><h2>243</h2><div class="plus">+12 bu ay</div></div>
-      <div class="card-icon purple">▱</div>
-    </div>
-    <div class="card">
-      <div><small>Az Kalanlar</small><h2>18</h2><small>Dikkat edilmesi gerek</small></div>
-      <div class="card-icon orange">⚠</div>
-    </div>
-    <div class="card">
-      <div><small>Eksik Malzemeler</small><h2>7</h2><small>Sipariş verilmeli</small></div>
-      <div class="card-icon red">▣</div>
-    </div>
-    <div class="card">
-      <div><small>Toplam Değer</small><h2>₺45.250</h2><small>Tahmini değer</small></div>
-      <div class="card-icon green">▣</div>
-    </div>
+    <div class="card"><div><small>Toplam Malzeme</small><h2 id="totalCount">0</h2><div class="plus">+0 bu ay</div></div><div class="card-icon purple">▱</div></div>
+    <div class="card"><div><small>Az Kalanlar</small><h2 id="lowCount">0</h2><small>Dikkat edilmesi gerek</small></div><div class="card-icon orange">⚠</div></div>
+    <div class="card"><div><small>Eksik Malzemeler</small><h2 id="missingCount">0</h2><small>Sipariş verilmeli</small></div><div class="card-icon red">▣</div></div>
+    <div class="card"><div><small>Toplam Değer</small><h2 id="totalValue">₺0</h2><small>Tahmini değer</small></div><div class="card-icon green">▣</div></div>
   </section>
 
   <div class="layout">
-
     <div>
       <section class="panel">
         <div class="panel-head">
           <div><h3>Malzemeler</h3><p>Tüm malzemelerin listesi</p></div>
-          <div class="tools"><button class="tool">▽ Filtrele</button><button class="tool">☷</button></div>
+          <div><button class="tool">▽ Filtrele</button> <button class="tool">☷</button></div>
         </div>
 
         <table>
           <thead>
-            <tr>
-              <th>Fotoğraf</th><th>Malzeme Adı</th><th>Kategori</th><th>Reyon</th><th>Adet</th><th>Durum</th><th>İşlemler</th>
-            </tr>
+            <tr><th>Fotoğraf</th><th>Malzeme Adı</th><th>Kategori</th><th>Reyon</th><th>Adet</th><th>Durum</th><th>İşlemler</th></tr>
           </thead>
-          <tbody>
-            <tr><td><img class="photo" src="https://upload.wikimedia.org/wikipedia/commons/3/38/Arduino_Uno_-_R3.jpg"></td><td>Arduino Uno R3</td><td><span class="tag t-purple">Elektronik</span></td><td>A1 - 01</td><td>2 adet</td><td><span class="status az">Az Kaldı</span></td><td><button class="action">◉</button><button class="action">✎</button></td></tr>
-            <tr><td><img class="photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/LCD_16x2.jpg/320px-LCD_16x2.jpg"></td><td>LCD 16x2 Ekran</td><td><span class="tag t-blue">Ekranlar</span></td><td>B2 - 03</td><td>1 adet</td><td><span class="status az">Az Kaldı</span></td><td><button class="action">◉</button><button class="action">✎</button></td></tr>
-            <tr><td><img class="photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/220_Ohm_resistor.jpg/320px-220_Ohm_resistor.jpg"></td><td>220 Ohm Direnç</td><td><span class="tag t-purple">Elektronik</span></td><td>A1 - 05</td><td>50 adet</td><td><span class="status yeter">Yeterli</span></td><td><button class="action">◉</button><button class="action">✎</button></td></tr>
-            <tr><td><img class="photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Jumper_wires.jpg/320px-Jumper_wires.jpg"></td><td>Jumper Kablo (M-M)</td><td><span class="tag t-orange">Kablolar</span></td><td>C1 - 02</td><td>0 adet</td><td><span class="status eksik">Eksik</span></td><td><button class="action">◉</button><button class="action">✎</button></td></tr>
-            <tr><td><img class="photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Breadboard.jpg/320px-Breadboard.jpg"></td><td>Breadboard 830 Pin</td><td><span class="tag t-green">Kartlar</span></td><td>D1 - 01</td><td>3 adet</td><td><span class="status yeter">Yeterli</span></td><td><button class="action">◉</button><button class="action">✎</button></td></tr>
-            <tr><td><img class="photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/DHT11.jpg/320px-DHT11.jpg"></td><td>DHT11 Sıcaklık Sensörü</td><td><span class="tag t-cyan">Sensörler</span></td><td>E2 - 04</td><td>1 adet</td><td><span class="status az">Az Kaldı</span></td><td><button class="action">◉</button><button class="action">✎</button></td></tr>
-          </tbody>
+          <tbody id="materialTable"></tbody>
         </table>
-
         <div class="more">Daha Fazla Göster⌄</div>
       </section>
 
       <section class="panel">
-        <div class="panel-head">
-          <h3>Son Duyurular</h3>
-          <a style="color:#8a65ff;text-decoration:none">Tümünü Gör</a>
-        </div>
-
-        <div class="ann">
-          <div class="ann-icon purple">🔊</div>
-          <div class="ann-text"><b>LCD Ekranlar Hakkında</b> <span class="tag t-purple">Yeni</span><br><small>LCD ekranlar artık B2 reyonunda bulunmaktadır.</small></div>
-          <div class="admin-note">Admin<br><small>2 saat önce</small></div>
-        </div>
-
-        <div class="ann">
-          <div class="ann-icon green">🔊</div>
-          <div class="ann-text"><b>Haftalık Stok Kontrolü</b> <span class="tag t-purple">Yeni</span><br><small>Bu hafta sonu stok kontrolü yapılacaktır.</small></div>
-          <div class="admin-note">Admin<br><small>1 gün önce</small></div>
-        </div>
+        <div class="panel-head"><h3>Son Duyurular</h3><a style="color:#8a65ff;text-decoration:none">Tümünü Gör</a></div>
+        <div class="ann"><div class="ann-icon purple">🔊</div><div class="ann-text"><b>Sistem Hazır</b> <span class="tag t-purple">Yeni</span><br><small>Malzemeleri admin panelinden ekleyebilirsiniz.</small></div><div class="admin-note">Admin<br><small>Şimdi</small></div></div>
       </section>
     </div>
 
@@ -280,25 +133,108 @@ border-radius:8px;border:1px solid #6939c7;color:#9d84ff;background:transparent
       </section>
 
       <section class="panel">
-        <div class="panel-head">
-          <div><h3>🏅 Proje Fikri Önerisi</h3><p style="color:#38e48b">Yapay Zeka'dan</p></div>
-          <button class="tool">↻</button>
-        </div>
-
+        <div class="panel-head"><div><h3>🏅 Proje Fikri Önerisi</h3><p style="color:#38e48b">Yapay Zeka'dan</p></div><button class="tool">↻</button></div>
         <div class="project-card">
           <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400">
-          <div class="project-body">
-            <h3>Akıllı Hava Kalitesi Monitörü</h3>
-            <p>DHT11 sensörü ile sıcaklık ve nem ölçen, LCD ekranda gösteren akıllı sistem.</p>
-            <div class="tags"><span>Arduino</span><span>DHT11</span><span>LCD 16x2</span><span>Breadboard</span></div>
-            <button class="detail">Detayları Gör</button>
-          </div>
+          <div class="project-body"><h3>Akıllı Hava Kalitesi Monitörü</h3><p>DHT11 sensörü ile sıcaklık ve nem ölçen, LCD ekranda gösteren akıllı sistem.</p><div class="tags"><span>Arduino</span><span>DHT11</span><span>LCD 16x2</span><span>Breadboard</span></div><button class="detail">Detayları Gör</button></div>
         </div>
       </section>
     </div>
-
   </div>
 </main>
 </div>
+
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <h3>Malzeme Ekle</h3>
+    <input id="mName" placeholder="Malzeme adı">
+    <select id="mCategory">
+      <option>Elektronik</option><option>Ekranlar</option><option>Kablolar</option><option>Kartlar</option><option>Sensörler</option>
+    </select>
+    <input id="mShelf" placeholder="Reyon örn: A1 - 01">
+    <input id="mCount" type="number" placeholder="Adet">
+    <input id="mMin" type="number" placeholder="Az kaldı sınırı">
+    <input id="mPrice" type="number" placeholder="Birim fiyat">
+    <input id="mPhoto" placeholder="Fotoğraf linki">
+    <div class="modal-actions">
+      <button class="cancel" onclick="closeModal()">İptal</button>
+      <button class="save" onclick="addMaterial()">Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let materials = JSON.parse(localStorage.getItem("depoMaterials")) || [];
+
+function save(){localStorage.setItem("depoMaterials",JSON.stringify(materials))}
+function openModal(){modal.style.display="flex"}
+function closeModal(){modal.style.display="none"}
+
+function categoryClass(c){
+  if(c==="Ekranlar")return"t-blue";
+  if(c==="Kablolar")return"t-orange";
+  if(c==="Kartlar")return"t-green";
+  if(c==="Sensörler")return"t-cyan";
+  return"t-purple";
+}
+
+function getStatus(m){
+  if(Number(m.count)<=0)return["Eksik","eksik"];
+  if(Number(m.count)<=Number(m.min))return["Az Kaldı","az"];
+  return["Yeterli","yeter"];
+}
+
+function money(n){return "₺"+Number(n).toLocaleString("tr-TR")}
+
+function addMaterial(){
+  if(!mName.value || !mShelf.value){alert("Malzeme adı ve reyon yaz.");return}
+  materials.push({
+    name:mName.value,
+    category:mCategory.value,
+    shelf:mShelf.value,
+    count:Number(mCount.value||0),
+    min:Number(mMin.value||1),
+    price:Number(mPrice.value||0),
+    photo:mPhoto.value || "https://via.placeholder.com/100"
+  });
+  mName.value=mShelf.value=mCount.value=mMin.value=mPrice.value=mPhoto.value="";
+  save();render();closeModal();
+}
+
+function deleteMaterial(i){
+  if(confirm("Bu malzeme silinsin mi?")){
+    materials.splice(i,1);save();render();
+  }
+}
+
+function plus(i){materials[i].count++;save();render()}
+function minus(i){if(materials[i].count>0)materials[i].count--;save();render()}
+
+function render(){
+  let q=searchInput.value.toLowerCase();
+  let list=materials.filter(m=>m.name.toLowerCase().includes(q)||m.category.toLowerCase().includes(q)||m.shelf.toLowerCase().includes(q));
+
+  materialTable.innerHTML=list.length?list.map((m,i)=>{
+    let s=getStatus(m);
+    return `<tr>
+      <td><img class="photo" src="${m.photo}" onerror="this.src='https://via.placeholder.com/100'"></td>
+      <td>${m.name}</td>
+      <td><span class="tag ${categoryClass(m.category)}">${m.category}</span></td>
+      <td>${m.shelf}</td>
+      <td>${m.count} adet</td>
+      <td><span class="status ${s[1]}">${s[0]}</span></td>
+      <td><button class="action" onclick="plus(${i})">＋</button><button class="action" onclick="minus(${i})">－</button><button class="action" onclick="deleteMaterial(${i})">✕</button></td>
+    </tr>`
+  }).join(""):`<tr><td colspan="7" class="empty">Henüz malzeme eklenmedi.</td></tr>`;
+
+  totalCount.innerText=materials.length;
+  lowCount.innerText=materials.filter(m=>Number(m.count)>0 && Number(m.count)<=Number(m.min)).length;
+  missingCount.innerText=materials.filter(m=>Number(m.count)<=0).length;
+  totalValue.innerText=money(materials.reduce((a,b)=>a+(Number(b.count)*Number(b.price)),0));
+}
+
+searchInput.addEventListener("input",render);
+render();
+</script>
 </body>
 </html>
