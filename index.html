@@ -3,113 +3,353 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ArduinoProJ Dashboard</title>
+<title>DepoPanel</title>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
-body{background:#07111f;color:#e8eef7}
-.app{display:flex;min-height:100vh}
-.sidebar{width:245px;height:100vh;position:fixed;background:#07111f;border-right:1px solid #1b2b3f;padding:22px 15px}
-.logo{display:flex;align-items:center;gap:13px;font-size:22px;font-weight:700;margin-bottom:30px}
-.logo-icon{font-size:35px;color:#23d3ec}
-.menu a{display:flex;align-items:center;gap:14px;color:#dce7f4;text-decoration:none;padding:14px 15px;border-radius:8px;margin-bottom:8px}
-.menu a.active,.menu a:hover{background:#1263ff}
-.main{margin-left:245px;width:calc(100% - 245px)}
-.topbar{height:68px;border-bottom:1px solid #1b2b3f;display:flex;justify-content:space-between;align-items:center;padding:0 28px}
-.search{background:#07111f;border:1px solid #21334a;border-radius:8px;color:white;padding:12px 15px;width:230px}
-.content{padding:22px}
+body{background:#070d18;color:#eef4ff}
+.app{display:flex;min-height:100vh;background:radial-gradient(circle at top right,#101b34,#070d18 55%)}
+.sidebar{width:285px;height:100vh;position:fixed;left:0;top:0;background:#080f1d;border-right:1px solid #1b2940;padding:24px 20px}
+.logo{display:flex;align-items:center;gap:12px;font-size:24px;font-weight:800;margin-bottom:30px}
+.logo-icon{font-size:34px;color:#36a3ff}
+.menu-title{font-size:12px;color:#7d8aa0;margin:22px 8px 10px}
+.menu a{display:flex;align-items:center;gap:14px;color:#d7e2f1;text-decoration:none;padding:12px 14px;border-radius:10px;margin-bottom:6px;font-size:15px}
+.menu a.active{background:linear-gradient(90deg,#4927b8,#1c2851);border:1px solid #5a41e8}
+.menu a:hover{background:#111c30}
+.badge-mini{margin-left:auto;background:#ef3f6b;color:white;border-radius:999px;padding:3px 8px;font-size:12px}
+.guest{position:absolute;bottom:24px;left:20px;right:20px;background:#0c1829;border:1px solid #1d324d;border-radius:12px;padding:22px;text-align:center}
+.guest h3{color:#38e48b;margin-bottom:8px}
+.guest p{color:#a9b5c7;font-size:13px;margin-bottom:16px}
+.guest button{width:100%;padding:13px;border:0;border-radius:9px;background:#0d7a45;color:white;font-weight:700}
+.main{margin-left:285px;width:calc(100% - 285px);padding:18px 24px}
+.topbar{height:55px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.search{width:455px;background:#0d1628;border:1px solid #1d2c45;border-radius:10px;color:white;padding:14px 18px}
+.top-actions{display:flex;align-items:center;gap:16px}
+.add-btn{background:linear-gradient(90deg,#4961ff,#7b2cff);border:0;color:white;border-radius:9px;padding:14px 24px;font-weight:700;font-size:15px}
+.icon-btn{width:42px;height:42px;border-radius:10px;background:#0d1628;border:1px solid #1d2c45;display:flex;align-items:center;justify-content:center}
+.user{display:flex;align-items:center;gap:10px;color:#cfd8e7}
+.avatar{width:39px;height:39px;background:#17243a;border-radius:50%;display:flex;align-items:center;justify-content:center}
 .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:14px}
-.card{background:#101c2b;border:1px solid #1e3045;border-radius:10px;padding:20px}
-.card small{color:#9fb0c3}
-.card h2{font-size:28px;margin-top:8px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
-.panel{background:#101c2b;border:1px solid #1e3045;border-radius:10px;padding:18px}
-.panel h3{margin-bottom:10px}
-.chart{height:200px;border-left:1px solid #26384e;border-bottom:1px solid #26384e}
+.card{background:#0d1628;border:1px solid #1d2c45;border-radius:12px;padding:24px 22px;display:flex;justify-content:space-between;align-items:center;min-height:128px}
+.card small{color:#a7b4c8}
+.card h2{font-size:30px;margin:10px 0 8px}
+.card .plus{color:#38e48b;font-size:13px}
+.card-icon{width:66px;height:66px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:33px}
+.purple{background:#241a5a;color:#8a65ff}
+.orange{background:#3c2815;color:#ffb443}
+.red{background:#3e1728;color:#ff5b73}
+.green{background:#123b2a;color:#47e682}
+.layout{display:grid;grid-template-columns:2fr .95fr;gap:14px}
+.panel{background:#0d1628;border:1px solid #1d2c45;border-radius:12px;padding:20px;margin-bottom:14px}
+.panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.panel h3{font-size:20px}
+.panel p{color:#a7b4c8;font-size:14px;margin-top:7px}
+.tools{display:flex;gap:10px}
+.tool{background:#0b1322;border:1px solid #1d2c45;color:#dce7f5;border-radius:9px;padding:11px 16px}
 table{width:100%;border-collapse:collapse}
-th,td{padding:12px;border-bottom:1px solid #1e3045}
-th{color:#a9b8ca}
-.pcell{display:flex;align-items:center;gap:10px}
-.pcell img{width:45px;height:30px;background:white;border-radius:5px}
-.badge{padding:6px 12px;border-radius:6px;background:#3b1820;color:#ff5b5b}
-.badge.ok{background:#123b2a;color:#23d579}
+th,td{padding:11px 10px;border-bottom:1px solid #1b2940;text-align:left;font-size:14px}
+th{color:#a7b4c8;font-weight:500;background:#0b1322}
+.photo{width:70px;height:48px;object-fit:cover;background:white;border-radius:7px}
+.tag{padding:7px 10px;border-radius:7px;font-size:13px}
+.t-purple{background:#241a5a;color:#b09cff}
+.t-blue{background:#12325a;color:#65b8ff}
+.t-orange{background:#3c2815;color:#ffbf5f}
+.t-green{background:#113b2a;color:#55e68a}
+.t-cyan{background:#123b4b;color:#35d9ff}
+.status{padding:7px 11px;border-radius:7px;font-size:13px}
+.az{background:#3b2815;color:#ffb443}
+.yeter{background:#123b2a;color:#55e68a}
+.eksik{background:#3e1728;color:#ff6d7e}
+.action{width:34px;height:34px;border-radius:8px;background:#172446;border:1px solid #25395f;color:#7da2ff;margin-right:6px}
+.more{text-align:center;color:#a7b4c8;margin-top:13px}
+.ai{background:linear-gradient(145deg,#11173a,#0d1628);border:1px solid #3a2867}
+.ai-title{color:#9d65ff;display:flex;gap:10px;align-items:center;margin-bottom:18px}
+.chat-msg{background:#221c44;border-radius:12px;padding:15px;margin-bottom:14px;color:#e8ddff}
+.quick{display:block;width:max-content;margin:8px 0;padding:9px 12px;border-radius:8px;border:1px solid #6939c7;color:#9d84ff;background:transparent}
+.chat-input{display:flex;gap:8px;margin-top:18px}
+.chat-input input{flex:1;background:#151d32;border:1px solid #283751;color:white;border-radius:9px;padding:13px}
+.chat-input button{width:42px;border:0;border-radius:9px;background:#6d2bdc;color:white}
+.project-card{display:flex;gap:16px;margin-top:14px;background:#0b1322;border:1px solid #1d2c45;border-radius:10px;overflow:hidden}
+.project-card img{width:120px;object-fit:cover}
+.project-body{padding:15px}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin:13px 0}
+.tags span{background:#0f3944;color:#55eaff;padding:7px 10px;border-radius:7px;font-size:12px}
+.detail{width:100%;padding:13px;border:0;border-radius:8px;background:linear-gradient(90deg,#9a36e8,#5d23c8);color:white;font-weight:700}
+.ann{display:flex;align-items:center;gap:16px;padding:12px 5px;border-bottom:1px solid #1b2940}
+.ann-icon{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:25px}
+.ann-text{flex:1}
+.ann small{color:#a7b4c8}
+.admin-note{text-align:right;color:#38e48b;font-size:13px}
+@media(max-width:1100px){
+.sidebar{position:relative;width:100%;height:auto}
+.main{margin-left:0;width:100%}
+.app{display:block}
+.cards,.layout{grid-template-columns:1fr}
+.search{width:100%}
+.topbar{height:auto;gap:12px;flex-wrap:wrap}
+.guest{position:relative;left:auto;right:auto;bottom:auto;margin-top:20px}
+}
 </style>
 </head>
 
 <body>
-
 <div class="app">
 
 <aside class="sidebar">
-  <div class="logo"><div class="logo-icon">∞</div>ArduinoProJ</div>
+  <div class="logo"><div class="logo-icon">❯❯</div><div>DepoPanel</div></div>
+
   <nav class="menu">
-    <a class="active">Dashboard</a>
-    <a>Ürünler</a>
-    <a>Kategoriler</a>
-    <a>Projeler</a>
-    <a>Sorgu</a>
-    <a>Stok Hareketleri</a>
+    <a class="active" href="#">⌂ Ana Sayfa</a>
+
+    <div class="menu-title">ENVANTER</div>
+    <a href="#">▦ Tüm Malzemeler</a>
+    <a href="#">▱ Kategoriler</a>
+    <a href="#">▧ Reyonlar</a>
+    <a href="#">ⓘ Az Kalanlar</a>
+    <a href="#">▣ Eksik Malzemeler</a>
+
+    <div class="menu-title">AKILLI SİSTEM</div>
+    <a href="#">✧ Yapay Zeka Asistanı <span class="badge-mini" style="background:#7b2cff">Yeni</span></a>
+    <a href="#">✣ Proje Fikirleri</a>
+    <a href="#">✦ Eksik Parça Önerileri</a>
+
+    <div class="menu-title">MESAJLAR</div>
+    <a href="#">✉ Mesajlar <span class="badge-mini">2</span></a>
+    <a href="#">☞ Duyurular</a>
+
+    <div class="menu-title">YÖNETİM</div>
+    <a href="#">♙ Kullanıcılar</a>
+    <a href="#">⌘ Davet Kodları</a>
+    <a href="#">▥ Raporlar</a>
+    <a href="#">⚙ Ayarlar</a>
   </nav>
+
+  <div class="guest">
+    <h3>Misafir Modu</h3>
+    <p>Sınırlı erişimdesiniz</p>
+    <button>🔒 Üye Girişi Yap</button>
+  </div>
 </aside>
 
 <main class="main">
 
-<div class="topbar">
-  <h2>Dashboard</h2>
-  <input class="search" placeholder="Ara...">
-</div>
+  <div class="topbar">
+    <input class="search" placeholder="⌕  Malzeme ara...                                      Ctrl + K">
 
-<div class="content">
-
-<div class="cards">
-  <div class="card"><small>Toplam Ürün</small><h2>1.248</h2></div>
-  <div class="card"><small>Toplam Stok</small><h2>15.430</h2></div>
-  <div class="card"><small>Stok Değeri</small><h2>₺2.458.650</h2></div>
-  <div class="card"><small>Düşük Stok</small><h2>23</h2></div>
-</div>
-
-<div class="grid">
-  <div class="panel">
-    <h3>Stok Hareketleri</h3>
-    <div class="chart"></div>
+    <div class="top-actions">
+      <button class="add-btn">＋ Malzeme Ekle</button>
+      <div class="icon-btn">🔔</div>
+      <div class="user">
+        <div class="avatar">👤</div>
+        <div>
+          <div>Hoş geldin, <b>Admin</b></div>
+          <small>Yönetici</small>
+        </div>
+        <span>⌄</span>
+      </div>
+    </div>
   </div>
 
-  <div class="panel">
-    <h3>Düşük Stok</h3>
-    <table>
-      <tr><td>Arduino Nano</td><td>12</td><td><span class="badge">Düşük</span></td></tr>
-      <tr><td>HC-SR04</td><td>3</td><td><span class="badge">Düşük</span></td></tr>
-    </table>
+  <section class="cards">
+    <div class="card">
+      <div>
+        <small>Toplam Malzeme</small>
+        <h2>243</h2>
+        <div class="plus">+12 bu ay</div>
+      </div>
+      <div class="card-icon purple">▱</div>
+    </div>
+
+    <div class="card">
+      <div>
+        <small>Az Kalanlar</small>
+        <h2>18</h2>
+        <small>Dikkat edilmesi gerek</small>
+      </div>
+      <div class="card-icon orange">⚠</div>
+    </div>
+
+    <div class="card">
+      <div>
+        <small>Eksik Malzemeler</small>
+        <h2>7</h2>
+        <small>Sipariş verilmeli</small>
+      </div>
+      <div class="card-icon red">▣</div>
+    </div>
+
+    <div class="card">
+      <div>
+        <small>Toplam Değer</small>
+        <h2>₺45.250</h2>
+        <small>Tahmini değer</small>
+      </div>
+      <div class="card-icon green">▣</div>
+    </div>
+  </section>
+
+  <div class="layout">
+
+    <div>
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h3>Malzemeler</h3>
+            <p>Tüm malzemelerin listesi</p>
+          </div>
+          <div class="tools">
+            <button class="tool">▽ Filtrele</button>
+            <button class="tool">☷</button>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Fotoğraf</th>
+              <th>Malzeme Adı</th>
+              <th>Kategori</th>
+              <th>Reyon</th>
+              <th>Adet</th>
+              <th>Durum</th>
+              <th>İşlemler</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><img class="photo" src="https://upload.wikimedia.org/wikipedia/commons/3/38/Arduino_Uno_-_R3.jpg"></td>
+              <td>Arduino Uno R3</td>
+              <td><span class="tag t-purple">Elektronik</span></td>
+              <td>A1 - 01</td>
+              <td>2 adet</td>
+              <td><span class="status az">Az Kaldı</span></td>
+              <td><button class="action">◉</button><button class="action">✎</button></td>
+            </tr>
+            <tr>
+              <td><img class="photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/LCD_16x2.jpg/320px-LCD_16x2.jpg"></td>
+              <td>LCD 16x2 Ekran</td>
+              <td><span class="tag t-blue">Ekranlar</span></td>
+              <td>B2 - 03</td>
+              <td>1 adet</td>
+              <td><span class="status az">Az Kaldı</span></td>
+              <td><button class="action">◉</button><button class="action">✎</button></td>
+            </tr>
+            <tr>
+              <td><img class="photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/220_Ohm_resistor.jpg/320px-220_Ohm_resistor.jpg"></td>
+              <td>220 Ohm Direnç</td>
+              <td><span class="tag t-purple">Elektronik</span></td>
+              <td>A1 - 05</td>
+              <td>50 adet</td>
+              <td><span class="status yeter">Yeterli</span></td>
+              <td><button class="action">◉</button><button class="action">✎</button></td>
+            </tr>
+            <tr>
+              <td><img class="photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Jumper_wires.jpg/320px-Jumper_wires.jpg"></td>
+              <td>Jumper Kablo (M-M)</td>
+              <td><span class="tag t-orange">Kablolar</span></td>
+              <td>C1 - 02</td>
+              <td>0 adet</td>
+              <td><span class="status eksik">Eksik</span></td>
+              <td><button class="action">◉</button><button class="action">✎</button></td>
+            </tr>
+            <tr>
+              <td><img class="photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Breadboard.jpg/320px-Breadboard.jpg"></td>
+              <td>Breadboard 830 Pin</td>
+              <td><span class="tag t-green">Kartlar</span></td>
+              <td>D1 - 01</td>
+              <td>3 adet</td>
+              <td><span class="status yeter">Yeterli</span></td>
+              <td><button class="action">◉</button><button class="action">✎</button></td>
+            </tr>
+            <tr>
+              <td><img class="photo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/DHT11.jpg/320px-DHT11.jpg"></td>
+              <td>DHT11 Sıcaklık Sensörü</td>
+              <td><span class="tag t-cyan">Sensörler</span></td>
+              <td>E2 - 04</td>
+              <td>1 adet</td>
+              <td><span class="status az">Az Kaldı</span></td>
+              <td><button class="action">◉</button><button class="action">✎</button></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="more">Daha Fazla Göster⌄</div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h3>Son Duyurular</h3>
+          <a style="color:#8a65ff;text-decoration:none" href="#">Tümünü Gör</a>
+        </div>
+
+        <div class="ann">
+          <div class="ann-icon purple">🔊</div>
+          <div class="ann-text">
+            <b>LCD Ekranlar Hakkında</b> <span class="tag t-purple">Yeni</span>
+            <br><small>LCD ekranlar artık B2 reyonunda bulunmaktadır.</small>
+          </div>
+          <div class="admin-note">Admin<br><small>2 saat önce</small></div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-icon green">🔊</div>
+          <div class="ann-text">
+            <b>Haftalık Stok Kontrolü</b> <span class="tag t-purple">Yeni</span>
+            <br><small>Bu hafta sonu stok kontrolü yapılacaktır.</small>
+          </div>
+          <div class="admin-note">Admin<br><small>1 gün önce</small></div>
+        </div>
+      </section>
+    </div>
+
+    <div>
+      <section class="panel ai">
+        <h3 class="ai-title">✦ Yapay Zeka Asistanı</h3>
+
+        <div class="chat-msg">
+          Merhaba! 👋<br>
+          Ben senin yapay zeka asistanın.<br>
+          Sana nasıl yardımcı olabilirim?
+        </div>
+
+        <button class="quick">Elimdeki malzemelerle ne yapabilirim?</button>
+        <button class="quick">Eksik malzemeleri listele</button>
+        <button class="quick">Bana proje fikri ver</button>
+        <button class="quick">Arduino ile neler yapabilirim?</button>
+
+        <div class="chat-input">
+          <input placeholder="Sorunuzu yazın...">
+          <button>➤</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h3>🏅 Proje Fikri Önerisi</h3>
+            <p style="color:#38e48b">Yapay Zeka'dan</p>
+          </div>
+          <button class="tool">↻</button>
+        </div>
+
+        <div class="project-card">
+          <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400">
+          <div class="project-body">
+            <h3>Akıllı Hava Kalitesi Monitörü</h3>
+            <p>DHT11 sensörü ile sıcaklık ve nem ölçen, LCD ekranda gösteren akıllı sistem.</p>
+            <div class="tags">
+              <span>Arduino</span>
+              <span>DHT11</span>
+              <span>LCD 16x2</span>
+              <span>Breadboard</span>
+            </div>
+            <button class="detail">Detayları Gör</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
   </div>
-</div>
-
-<div class="panel">
-  <h3>Stok Durumu</h3>
-  <table>
-    <tr>
-      <th>Ürün</th><th>Kod</th><th>Kategori</th><th>Stok</th><th>Durum</th>
-    </tr>
-
-    <tr>
-      <td class="pcell"><img src="https://upload.wikimedia.org/wikipedia/commons/3/38/Arduino_Uno_-_R3.jpg">Arduino Uno</td>
-      <td>A001</td>
-      <td>Kart</td>
-      <td>25</td>
-      <td><span class="badge ok">Normal</span></td>
-    </tr>
-
-    <tr>
-      <td class="pcell"><img src="https://upload.wikimedia.org/wikipedia/commons/7/76/HC-SR04.jpg">HC-SR04</td>
-      <td>S001</td>
-      <td>Sensör</td>
-      <td>3</td>
-      <td><span class="badge">Düşük</span></td>
-    </tr>
-
-  </table>
-</div>
-
-</div>
 </main>
 </div>
 
