@@ -1,12 +1,301 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Arduino Depo Panel</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arduino Depo Panel</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#020617;color:white}
+button{cursor:pointer}
+.app{display:flex;min-height:100vh}
+.sidebar{width:260px;background:#081322;padding:20px;border-right:1px solid #1f2a3a}
+.logo{font-size:24px;font-weight:bold;margin-bottom:25px}
+.menu div{padding:12px;margin:8px 0;border-radius:10px;color:#cbd5e1;cursor:pointer}
+.menu div:hover,.menu .active{background:#4f46e5;color:white}
+.adminBox{margin-top:25px;background:#0f1b2e;padding:15px;border-radius:14px}
+.main{flex:1;padding:20px}
+.top{display:flex;gap:10px;margin-bottom:20px}
+.search,.input{padding:12px;border-radius:10px;border:1px solid #243247;background:#0f1b2e;color:white}
+.search{flex:1}
+.btn{padding:12px 16px;background:#4f46e5;border:none;border-radius:10px;color:white}
+.btn.red{background:#dc2626}
+.btn.green{background:#16a34a}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:20px}
+.card,.panel{background:#0f1b2e;padding:20px;border-radius:15px;border:1px solid #243247}
+.grid{display:grid;grid-template-columns:2fr 1fr;gap:15px}
+table{width:100%;border-collapse:collapse}
+th,td{padding:10px;border-bottom:1px solid #243247;text-align:left}
+.good{color:#22c55e}.low{color:#f59e0b}.bad{color:#ef4444}
+.form{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:15px}
+.hidden{display:none}
+@media(max-width:900px){
+.app{display:block}
+.sidebar{width:100%;min-height:auto}
+.cards{grid-template-columns:1fr 1fr}
+.grid{grid-template-columns:1fr}
+.form{grid-template-columns:1fr}
+}
+</style>
 </head>
+
 <body>
-  <h1>Arduino Depo Panel</h1>
-  <p>Kurulum başladı.</p>
+
+<div class="app">
+
+<div class="sidebar">
+  <div class="logo">🔷 Arduino Depo</div>
+
+  <div class="menu">
+    <div class="active" onclick="showPage('home')">🏠 Ana Sayfa</div>
+    <div onclick="showPage('stock')">📦 Stok</div>
+    <div onclick="showPage('orders')">🛒 Sipariş Listesi</div>
+    <div onclick="showPage('projects')">🤖 Projeler</div>
+    <div onclick="showPage('admin')">💎 Admin</div>
+  </div>
+
+  <div class="adminBox">
+    <h3>Admin Girişi</h3>
+    <input id="adminCode" class="input" placeholder="Admin kodu">
+    <button class="btn" onclick="adminLogin()">Admin Gir</button>
+    <p id="adminStatus">Durum: Üye modu</p>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="top">
+    <input id="search" class="search" placeholder="Malzeme ara..." oninput="render()">
+    <button id="addBtn" class="btn hidden" onclick="toggleForm()">+ Malzeme Ekle</button>
+  </div>
+
+  <div class="cards">
+    <div class="card"><p>Toplam</p><h2 id="total">0</h2></div>
+    <div class="card"><p>Az Kalan</p><h2 id="low" class="low">0</h2></div>
+    <div class="card"><p>Biten</p><h2 id="out" class="bad">0</h2></div>
+    <div class="card"><p>Sipariş</p><h2 id="order">0</h2></div>
+  </div>
+
+  <div id="addForm" class="panel hidden">
+    <h2>Malzeme Ekle</h2>
+    <div class="form">
+      <input id="name" class="input" placeholder="Malzeme adı">
+      <input id="qty" class="input" type="number" placeholder="Adet">
+      <input id="cat" class="input" placeholder="Kategori">
+      <input id="min" class="input" type="number" placeholder="Minimum stok">
+    </div>
+    <button class="btn green" onclick="addItem()">Kaydet</button>
+  </div>
+
+  <div id="content"></div>
+
+</div>
+</div>
+
+<script>
+const ADMIN_CODE = "ATAADMIN";
+let isAdmin = false;
+
+let materials = JSON.parse(localStorage.getItem("materials")) || [
+  {name:"Arduino Uno", category:"Kontrol", quantity:3, min:5},
+  {name:"LED", category:"Işık", quantity:0, min:10},
+  {name:"Direnç", category:"Elektronik", quantity:120, min:20}
+];
+
+let currentPage = "home";
+
+function save(){
+  localStorage.setItem("materials", JSON.stringify(materials));
+}
+
+function adminLogin(){
+  const code = document.getElementById("adminCode").value;
+
+  if(code === ADMIN_CODE){
+    isAdmin = true;
+    document.getElementById("adminStatus").innerText = "Durum: Admin modu aktif 💎";
+    document.getElementById("addBtn").classList.remove("hidden");
+    alert("Admin girişi başarılı!");
+    render();
+  } else {
+    alert("Admin kodu yanlış!");
+  }
+}
+
+function showPage(page){
+  currentPage = page;
+
+  document.querySelectorAll(".menu div").forEach(x => x.classList.remove("active"));
+  event.target.classList.add("active");
+
+  render();
+}
+
+function render(){
+  updateStats();
+
+  if(currentPage === "home" || currentPage === "stock") renderStock();
+  if(currentPage === "orders") renderOrders();
+  if(currentPage === "projects") renderProjects();
+  if(currentPage === "admin") renderAdmin();
+}
+
+function updateStats(){
+  let total = materials.length;
+  let low = materials.filter(m => m.quantity > 0 && m.quantity <= m.min).length;
+  let out = materials.filter(m => m.quantity <= 0).length;
+
+  document.getElementById("total").innerText = total;
+  document.getElementById("low").innerText = low;
+  document.getElementById("out").innerText = out;
+  document.getElementById("order").innerText = low + out;
+}
+
+function renderStock(){
+  const q = document.getElementById("search").value.toLowerCase();
+
+  let list = materials.filter(m =>
+    m.name.toLowerCase().includes(q) ||
+    m.category.toLowerCase().includes(q)
+  );
+
+  document.getElementById("content").innerHTML = `
+    <div class="grid">
+      <div class="panel">
+        <h2>📦 Malzemeler</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Ad</th>
+              <th>Kategori</th>
+              <th>Adet</th>
+              <th>Durum</th>
+              ${isAdmin ? "<th>İşlem</th>" : ""}
+            </tr>
+          </thead>
+          <tbody>
+            ${list.map((m,i)=>row(m,i)).join("")}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="panel">
+        <h2>🤖 AI Öneri</h2>
+        <p id="aiText">${aiSuggest()}</p>
+      </div>
+    </div>
+  `;
+}
+
+function row(m,i){
+  let durum = `<span class="good">Yeterli</span>`;
+
+  if(m.quantity <= 0) durum = `<span class="bad">Bitti</span>`;
+  else if(m.quantity <= m.min) durum = `<span class="low">Az kaldı</span>`;
+
+  return `
+    <tr>
+      <td>${m.name}</td>
+      <td>${m.category}</td>
+      <td>${m.quantity}</td>
+      <td>${durum}</td>
+      ${isAdmin ? `<td><button class="btn red" onclick="deleteItem(${i})">Sil</button></td>` : ""}
+    </tr>
+  `;
+}
+
+function renderOrders(){
+  let orders = materials.filter(m => m.quantity <= m.min);
+
+  document.getElementById("content").innerHTML = `
+    <div class="panel">
+      <h2>🛒 Sipariş Listesi</h2>
+      ${
+        orders.length === 0
+        ? "<p>Şu an sipariş gerekmiyor.</p>"
+        : orders.map(m => `<p>🛒 ${m.name} → önerilen alım: ${Math.max(m.min*2, 10)} adet</p>`).join("")
+      }
+    </div>
+  `;
+}
+
+function renderProjects(){
+  document.getElementById("content").innerHTML = `
+    <div class="panel">
+      <h2>🤖 Proje Önerileri</h2>
+      <p>${aiSuggest()}</p>
+      <br>
+      <p>Arduino + LED varsa: Trafik lambası projesi</p>
+      <p>Arduino + LCD varsa: Mini bilgi ekranı</p>
+      <p>DHT11 varsa: Sıcaklık/nem ölçer</p>
+    </div>
+  `;
+}
+
+function renderAdmin(){
+  document.getElementById("content").innerHTML = `
+    <div class="panel">
+      <h2>💎 Admin Paneli</h2>
+      ${
+        isAdmin
+        ? "<p>Admin aktif. Malzeme ekleyebilir ve silebilirsin.</p>"
+        : "<p>Admin panelini görmek için soldan admin kodunu gir.</p>"
+      }
+      <p>Admin kodu: ATAADMIN</p>
+    </div>
+  `;
+}
+
+function aiSuggest(){
+  const names = materials.map(m => m.name.toLowerCase()).join(" ");
+
+  if(names.includes("arduino") && names.includes("led")){
+    return "Arduino + LED ile trafik lambası veya ışık animasyonu yapabilirsin.";
+  }
+
+  if(names.includes("lcd")){
+    return "LCD ekranla mini stok göstergesi yapabilirsin.";
+  }
+
+  return "Elindeki malzemelere göre basit Arduino başlangıç projesi yapabilirsin.";
+}
+
+function toggleForm(){
+  document.getElementById("addForm").classList.toggle("hidden");
+}
+
+function addItem(){
+  const name = document.getElementById("name").value;
+  const qty = Number(document.getElementById("qty").value || 0);
+  const cat = document.getElementById("cat").value || "Genel";
+  const min = Number(document.getElementById("min").value || 5);
+
+  if(!isAdmin) return alert("Sadece admin ekleme yapabilir.");
+  if(!name) return alert("Malzeme adı boş olamaz.");
+
+  materials.push({name, category:cat, quantity:qty, min});
+  save();
+
+  document.getElementById("name").value = "";
+  document.getElementById("qty").value = "";
+  document.getElementById("cat").value = "";
+  document.getElementById("min").value = "";
+
+  render();
+}
+
+function deleteItem(index){
+  if(!isAdmin) return alert("Sadece admin silebilir.");
+  if(confirm("Bu malzemeyi silmek istiyor musun?")){
+    materials.splice(index,1);
+    save();
+    render();
+  }
+}
+
+render();
+</script>
+
 </body>
 </html>
